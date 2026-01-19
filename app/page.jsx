@@ -29,8 +29,8 @@ const MainPage = () => {
 
   return (
     <>
-      <header className="px-28 py-5 border-b border-gray-200">
-        <nav className="flex justify-between items-center">
+      <header className="px-28 py-5 ">
+        <nav className="flex justify-between items-center border-b border-gray-200 pb-5">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-4">
               <Image
@@ -42,7 +42,7 @@ const MainPage = () => {
               />
               <div className="">
                 <h1
-                  className="text-3xl font-bold
+                  className="text-3xl font-semibold
              bg-clip-text text-transparent
              bg-[linear-gradient(135deg,#B48900_0%,#FFC100_30%,#FFD966_50%,#FFC100_70%,#B48900_100%)]"
                   style={{
@@ -63,22 +63,22 @@ const MainPage = () => {
             </div>
           </div>
           <ul className="flex gap-11 text-[#4B4B4B]">
-            <li className="cursor-pointer hover:text-amber-600 transition-colors">
+            <li className="cursor-pointer hover:text-teal-600 transition-colors">
               Home
             </li>
-            <li className="cursor-pointer hover:text-amber-600 transition-colors">
+            <li className="cursor-pointer hover:text-teal-600 transition-colors">
               Stays
             </li>
-            <li className="cursor-pointer hover:text-amber-600 transition-colors">
+            <li className="cursor-pointer hover:text-teal-600 transition-colors">
               Tours
             </li>
-            <li className="cursor-pointer hover:text-amber-600 transition-colors">
+            <li className="cursor-pointer hover:text-teal-600 transition-colors">
               Transfers
             </li>
-            <li className="cursor-pointer hover:text-amber-600 transition-colors">
+            <li className="cursor-pointer hover:text-teal-600 transition-colors">
               Car Rental
             </li>
-            <li className="cursor-pointer hover:text-amber-600 transition-colors">
+            <li className="cursor-pointer hover:text-teal-600 transition-colors">
               About Us
             </li>
           </ul>
@@ -158,6 +158,27 @@ const MainPage = () => {
             </div>
           </div>
         </nav>
+        <div className="flex justify-between items-center mt-20">
+          <div>
+            <h2 className="text-6xl font-bold text-slate-800">
+              Explore Armenia
+              <br /> in Comfort
+            </h2>
+            <p className="text-lg w-4/5 mt-4 text-slate-600">
+              Start your trip with the exclusive offers to visit
+              Armenia. Relish the itinerary by exploring new places,
+              having a comfortable stay, delicious meals, and transfer
+              facilities
+            </p>
+          </div>
+          <Image
+            src="/images/yerevan.png"
+            className="w-[80%] object-cover h-70 rounded-tr-2xl rounded-br-2xl rounded-bl-2xl rounded-tl-[150px]"
+            alt="yerevan view"
+            width={1000}
+            height={1000}
+          />
+        </div>
       </header>
 
       {(isLangOpen || isCurrencyOpen) && (
@@ -170,7 +191,74 @@ const MainPage = () => {
         />
       )}
 
-      <main></main>
+      <main>
+        <section className="px-28 py-20">
+          <div className="bg-white w-full rounded-xl pt-3 pb-6 px-8">
+            <ul className="flex gap-10 justify-center items-center border-b border-gray-200 text-[#4B4B4B] pb-3">
+              <li className="cursor-pointer  transition-all hover:text-teal-600 rounded-lg p-1 px-5">
+                Stays
+              </li>
+              <li
+                selected
+                className="cursor-pointer  transition-all hover:text-teal-600 bg-teal-900/8 rounded-lg p-1 px-5">
+                Tours
+              </li>
+              <li className="cursor-pointer  transition-all hover:text-teal-600 rounded-lg p-1 px-5">
+                Transfers
+              </li>
+            </ul>
+            <div className="mt-8 flex items-end gap-6">
+              <div className="flex-1">
+                <label htmlFor="tourType" className="text-sm">
+                  Tour type
+                </label>
+                <br />
+                <select
+                  className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
+                  name="tourType"
+                  id="tourType">
+                  <option value="">Location</option>
+                </select>
+              </div>
+              <div className="flex-1">
+                <label htmlFor="tourType" className="text-sm">
+                  Tour type
+                </label>
+                <br />
+                <select
+                  className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
+                  name="tourType"
+                  id="tourType">
+                  <option value="">Location</option>
+                </select>
+              </div>
+              <div className="flex-1">
+                <label htmlFor="" className="text-sm">
+                  Starting Date
+                </label>
+                <br />
+                <input
+                  type="date"
+                  className="border w-full mt-2 border-slate-300 p-2 rounded-lg"
+                />
+              </div>
+              <div className="flex-1">
+                <label htmlFor="" className="text-sm">
+                  Ending Date
+                </label>
+                <br />
+                <input
+                  type="date"
+                  className="border w-full mt-2 border-slate-300 p-2 rounded-lg"
+                />
+              </div>
+              <button className="bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer text-white px-6 p-2  rounded-lg hover:bg-amber-600 transition-colors">
+                Search
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
       <footer></footer>
     </>
   );
