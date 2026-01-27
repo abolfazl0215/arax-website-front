@@ -1,0 +1,19 @@
+{
+  "HomePage": {
+    "title": "مرحبا بكم في موقعنا",
+    "description": "هذا مثال متعدد اللغات",
+    "welcome": "مرحبا"
+  },
+  "Navigation": {
+    "home": "خانه",
+    "stays": "اقامت",
+    "tours": "تورها",
+    "transfers": "ترنسفر",
+    "aboutUs": "درباره ما"
+  },
+  "Common": {
+    "loading": "جاري التحميل...",
+    "submit": "إرسال",
+    "cancel": "إلغاء"
+  }
+}

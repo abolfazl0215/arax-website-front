@@ -2,13 +2,19 @@
 import React from "react";
 import { Check } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useLanguageStore } from "@/stores/useLanguageStore";
 
 export default function WhyAraksGroup() {
+  const home = useTranslations("HomePage");
+  const { language } = useLanguageStore();
+
   const features = [
-    "Over 15 years of experience in the tourism world.",
-    "Tour packages at the best prices.",
-    "Excellent reviews from clients on various websites.",
-    "24/7 customer support with a dedicated staff.",
+    home("whyAraksOption1"),
+    home("whyAraksOption2"),
+    home("whyAraksOption3"),
+    home("whyAraksOption4"),
   ];
 
   const images = [
@@ -38,14 +44,11 @@ export default function WhyAraksGroup() {
         {/* Left Content */}
         <div className="flex-1 order-1">
           <h2 className="text-[6.3vw] md:text-3xl font-bold text-gray-900 mb-6">
-            Why araks group
+            {home("whyAraksGroup")}
           </h2>
 
           <p className=" text-gray-600 leading-relaxed mb-8">
-            We offer you the best travel in Armenia, as our package
-            includes multiple things that you can leverage at ease. So
-            book the tour, pick your bags and travel Armenia. Here's
-            few reason why to choose us:
+            {home("whyAraksGroupDesc1")}
           </p>
 
           {/* Features List */}
@@ -66,9 +69,11 @@ export default function WhyAraksGroup() {
           </div>
 
           {/* Read More Button */}
-          <button className="px-6 py-2 bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer hover:bg-blue-600 text-white text-lg font-medium rounded-lg transition-colors shadow-lg hover:shadow-xl">
-            Read more
-          </button>
+          <Link
+            href={`/${language.code}/about`}
+            className="px-6 py-2 bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer hover:bg-blue-600 text-white text-lg font-medium rounded-lg transition-colors shadow-lg hover:shadow-xl">
+            {home("readMore")}
+          </Link>
         </div>
 
         {/* Right Images Grid */}

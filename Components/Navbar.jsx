@@ -1,28 +1,35 @@
+"use client";
+
 import { ChevronDown, Menu, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import LanguageSwitcherDesktop from "./LanguageSwitcherDesktop";
+import LanguageSwitcherMobile from "./LanguageSwitcherMobile";
+import ChooseCurrencyDesktop from "./ChooseCurrencyDesktop";
+import ChooseCurrencyMobile from "./ChooseCurrencyMobile";
+import { useLanguageStore } from "@/stores/useLanguageStore";
 
 const Navbar = () => {
-  const languages = [
-    { code: "ENG", name: "English", flag: "🇬🇧" },
-    { code: "HY", name: "Հայերեն", flag: "🇦🇲" },
-    { code: "FA", name: "فارسی", flag: "🇮🇷" },
-    { code: "KA", name: "ქართული", flag: "🇬🇪" },
-    { code: "RU", name: "Русский", flag: "🇷🇺" },
-  ];
+  // ترجمه‌ها
+  const nav = useTranslations("Navigation");
+  const { language } = useLanguageStore();
 
-  const currencies = [
-    { code: "AMD", name: "Armenian Dram" },
-    { code: "RUB", name: "Russian Ruble" },
-    { code: "GEL", name: "Georgian Lari" },
-    { code: "USD", name: "US Dollar" },
-  ];
+  const pathname = usePathname();
+
+  const isActive = (path) =>
+    pathname === path
+      ? "font-semibold text-teal-600"
+      : "hover:text-teal-600 transition-colors";
 
   const [selectedLang, setSelectedLang] = useState({
     code: "ENG",
     name: "English",
-    flag: "🇬🇧",
+    flag: "🇬🇧", 
   });
+
   const [selectedCurrency, setSelectedCurrency] = useState("AMD");
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
@@ -88,82 +95,45 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Navigation - Hidden on mobile */}
-        <ul className="hidden md:flex gap-11 text-[#4B4B4B]">
-          <li className="cursor-pointer hover:text-teal-600 transition-colors">
-            Home
-          </li>
-          <li className="cursor-pointer hover:text-teal-600 transition-colors">
-            Stays
-          </li>
-          <li className="cursor-pointer hover:text-teal-600 transition-colors">
-            Tours
-          </li>
-          <li className="cursor-pointer hover:text-teal-600 transition-colors">
-            Transfers
-          </li>
-          <li className="cursor-pointer hover:text-teal-600 transition-colors">
-            About Us
-          </li>
-        </ul>
+        <div className="hidden md:flex gap-11 text-[#4B4B4B] transition-all">
+          <Link
+            href={`/${language.code || "en"}`}
+            className={`${isActive(`/${language.code || "en"}`)} cursor-pointer hover:text-teal-600 transition-colors`}>
+            {nav("home")}
+          </Link>
+          <Link
+            href={`/${language.code || "en"}/stays`}
+            className={`${isActive(`/${language.code || "en"}/stays`)} cursor-pointer hover:text-teal-600 transition-colors`}>
+            {nav("stays")}
+          </Link>
+          <Link
+            href={`/${language.code || "en"}/tours`}
+            className={`${isActive(`/${language.code || "en"}/tours`)} cursor-pointer hover:text-teal-600 transition-colors`}>
+            {nav("tours")}
+          </Link>
+          <Link
+            href={`/${language.code || "en"}/transfers`}
+            className={`${isActive(`/${language.code || "en"}/transfers`)} cursor-pointer hover:text-teal-600 transition-colors`}>
+            {nav("transfers")}
+          </Link>
+          <Link
+            href={`/${language.code || "en"}/about`}
+            className={`${isActive(`/${language.code || "en"}/about`)} cursor-pointer hover:text-teal-600 transition-colors`}>
+            {nav("aboutUs")}
+          </Link>
+        </div>
 
         {/* Language & Currency Selectors - Hidden on mobile */}
         <div className="hidden md:flex gap-2">
-          <div className="relative">
-            <button
-              onClick={() => {
-                setIsLangOpen(!isLangOpen);
-                setIsCurrencyOpen(false);
-              }}
-              className="px-4 py-2 rounded-lg bg-slate-200 flex items-center gap-2 text-sm hover:bg-slate-300 transition-colors cursor-pointer">
-              <span className="mr-1">{selectedLang.flag}</span>
-              <span className="w-8">{selectedLang.code}</span>
-              <ChevronDown size={15} />
-            </button>
+          <LanguageSwitcherDesktop />
 
-            {isLangOpen && (
-              <div className="absolute top-full mt-2 right-0 bg-white rounded-lg border border-gray-200 overflow-hidden z-50 min-w-[150px]">
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => {
-                      setSelectedLang(lang);
-                      setIsLangOpen(false);
-                    }}
-                    className="w-full cursor-pointer px-4 py-2 text-left hover:bg-slate-100 transition-colors text-sm">
-                    {lang.code} - {lang.name}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="relative">
-            <button
-              onClick={() => {
-                setIsCurrencyOpen(!isCurrencyOpen);
-                setIsLangOpen(false);
-              }}
-              className="px-4 py-2 cursor-pointer text-sm rounded-lg border border-slate-300 hover:border-slate-500 transition-all flex items-center gap-2 hover:bg-slate-100">
-              <span className="w-8">{selectedCurrency}</span>
-              <ChevronDown size={15} />
-            </button>
-
-            {isCurrencyOpen && (
-              <div className="absolute top-full mt-2 right-0 bg-white rounded-lg border border-gray-200 overflow-hidden z-50 min-w-[150px]">
-                {currencies.map((currency) => (
-                  <button
-                    key={currency.code}
-                    onClick={() => {
-                      setSelectedCurrency(currency.code);
-                      setIsCurrencyOpen(false);
-                    }}
-                    className="w-full px-4 py-2 text-left hover:bg-slate-100 transition-colors text-sm">
-                    {currency.code} - {currency.name}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* /// */}
+          <ChooseCurrencyDesktop
+            setIsCurrencyOpen={setIsCurrencyOpen}
+            setIsLangOpen={setIsLangOpen}
+            isCurrencyOpen={isCurrencyOpen}
+            selectedCurrency={selectedCurrency}
+          />
         </div>
 
         {/* Spacer for mobile to balance layout */}
@@ -208,23 +178,33 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Navigation Links */}
-          <ul className="flex flex-col p-4 gap-4">
-            <li className="cursor-pointer hover:text-teal-600 transition-colors text-lg py-2 border-b border-gray-100">
-              Home
-            </li>
-            <li className="cursor-pointer hover:text-teal-600 transition-colors text-lg py-2 border-b border-gray-100">
-              Stays
-            </li>
-            <li className="cursor-pointer hover:text-teal-600 transition-colors text-lg py-2 border-b border-gray-100">
-              Tours
-            </li>
-            <li className="cursor-pointer hover:text-teal-600 transition-colors text-lg py-2 border-b border-gray-100">
-              Transfers
-            </li>
-            <li className="cursor-pointer hover:text-teal-600 transition-colors text-lg py-2 border-b border-gray-100">
-              About Us
-            </li>
-          </ul>
+          <div className="flex flex-col p-4 gap-4">
+            <Link
+              href={`/${language.code || "en"}`}
+              className={`${isActive(`/${language.code || "en"}`)} cursor-pointer hover:text-teal-600 transition-colors text-lg py-2 border-b border-gray-100`}>
+              {nav("home")}
+            </Link>
+            <Link
+              href={`/${language.code || "en"}/stays`}
+              className={`${isActive(`/${language.code || "en"}/stays`)} cursor-pointer hover:text-teal-600 transition-colors text-lg py-2 border-b border-gray-100`}>
+              {nav("stays")}
+            </Link>
+            <Link
+              href={`/${language.code || "en"}/tours`}
+              className={`${isActive(`/${language.code || "en"}/tours`)} cursor-pointer hover:text-teal-600 transition-colors text-lg py-2 border-b border-gray-100`}>
+              {nav("tours")}
+            </Link>
+            <Link
+              href={`/${language.code || "en"}/transfers`}
+              className={`${isActive(`/${language.code || "en"}/transfers`)} cursor-pointer hover:text-teal-600 transition-colors text-lg py-2 border-b border-gray-100`}>
+              {nav("transfers")}
+            </Link>
+            <Link
+              href={`/${language.code || "en"}/about`}
+              className={`${isActive(`/${language.code || "en"}/about`)} cursor-pointer hover:text-teal-600 transition-colors text-lg py-2 border-b border-gray-100`}>
+              {nav("aboutUs")}
+            </Link>
+          </div>
 
           {/* Mobile Language & Currency Selectors */}
           <div className="p-4 mt-auto border-t border-gray-200">
@@ -247,24 +227,15 @@ const Navbar = () => {
                 </button>
 
                 {isLangOpen && (
-                  <div className="absolute bottom-full mb-2 left-0 right-0 bg-white rounded-lg border border-gray-200 overflow-hidden">
-                    {languages.map((lang) => (
-                      <button
-                        key={lang.code}
-                        onClick={() => {
-                          setSelectedLang(lang);
-                          setIsLangOpen(false);
-                        }}
-                        className="w-full px-4 py-3 text-left hover:bg-slate-100 transition-colors text-sm">
-                        {lang.flag} {lang.code} - {lang.name}
-                      </button>
-                    ))}
-                  </div>
+                  <LanguageSwitcherMobile
+                    setSelectedLang={setSelectedLang}
+                    setIsLangOpen={setIsLangOpen}
+                  />
                 )}
               </div>
 
               {/* Currency Selector */}
-              <div className="relative">
+              {/* <div className="relative">
                 <button
                   onClick={() => {
                     setIsCurrencyOpen(!isCurrencyOpen);
@@ -290,7 +261,12 @@ const Navbar = () => {
                     ))}
                   </div>
                 )}
-              </div>
+              </div> */}
+              <ChooseCurrencyMobile
+                setIsCurrencyOpen={setIsCurrencyOpen}
+                setIsLangOpen={setIsLangOpen}
+                isCurrencyOpen={isCurrencyOpen}
+              />
             </div>
           </div>
         </div>

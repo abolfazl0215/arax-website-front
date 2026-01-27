@@ -1,40 +1,50 @@
+"use client";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useLanguageStore } from "../stores/useLanguageStore";
+
 export default function Footer() {
+  const home = useTranslations("HomePage");
+
+  const { language } = useLanguageStore();
+
   return (
-    <footer className="bg-gradient-to-b from-emerald-900 to-emerald-950 text-gray-300 py-12 px-6">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="bg-gradient-to-b from-emerald-900 to-emerald-950 text-gray-300 py-12 px-6 md:px-[10vw]">
+      <div className=" mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Navigation Section */}
         <div>
           <h3 className="text-white text-xl font-semibold mb-4">
-            Navigation
+            {home("navigation")}
           </h3>
+
           <ul className="space-y-3">
             <li>
-              <a
-                href="#contact"
+              <Link
+                href={`/${language.code}/contact`}
                 className="hover:text-white transition-colors duration-200">
-                Contact Us
-              </a>
+                {home("contactUs")}
+              </Link>
             </li>
             <li>
-              <a
-                href="#about"
+              <Link
+                href={`/${language.code}/about`}
                 className="hover:text-white transition-colors duration-200">
-                About Us
-              </a>
+                {home("aboutUs")}
+              </Link>
             </li>
             <li>
-              <a
-                href="#faq"
+              <Link
+                href={`/${language.code}/faq`}
                 className="hover:text-white transition-colors duration-200">
-                FAQ
-              </a>
+                {home("faq")}
+              </Link>
             </li>
             <li>
-              <a
-                href="#terms"
+              <Link
+                href={`/${language.code}/terms`}
                 className="hover:text-white transition-colors duration-200">
-                Terms and Conditions
-              </a>
+                {home("termsAndConditions")}
+              </Link>
             </li>
           </ul>
         </div>
@@ -42,36 +52,29 @@ export default function Footer() {
         {/* More Section */}
         <div>
           <h3 className="text-white text-xl font-semibold mb-4">
-            More
+            {home("more")}
           </h3>
           <ul className="space-y-3">
             <li>
-              <a
-                href="#privacy"
+              <Link
+                href={`/${language.code}/privacy`}
                 className="hover:text-white transition-colors duration-200">
-                Privacy policy
-              </a>
+                {home("privacyPolicy")}
+              </Link>
             </li>
             <li>
-              <a
-                href="#complaints"
+              <Link
+                href={`/${language.code}/complaints`}
                 className="hover:text-white transition-colors duration-200">
-                Complaints
-              </a>
+                {home("complaints")}
+              </Link>
             </li>
             <li>
-              <a
-                href="#blogs"
+              <Link
+                href={`/${language.code}/tours`}
                 className="hover:text-white transition-colors duration-200">
-                Blogs
-              </a>
-            </li>
-            <li>
-              <a
-                href="#tours"
-                className="hover:text-white transition-colors duration-200">
-                Tours
-              </a>
+                {home("tours")}
+              </Link>
             </li>
           </ul>
         </div>
@@ -79,7 +82,7 @@ export default function Footer() {
         {/* Social Media Section */}
         <div>
           <h3 className="text-white text-xl font-semibold mb-4">
-            Anax on Social Media
+            {home("araksOnSocialMedia")}
           </h3>
           <div className="flex gap-4">
             <a

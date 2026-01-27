@@ -5,8 +5,11 @@ import { ChevronLeft, ChevronRight, Play, Star } from "lucide-react";
 import "swiper/css";
 import "swiper/css/navigation";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function TravelerReviews() {
+  const home = useTranslations("HomePage");
+
   const reviews = [
     {
       id: 1,
@@ -52,7 +55,7 @@ export default function TravelerReviews() {
             {/* LEFT SECTION */}
             <div className="w-full lg:w-[28%] flex  flex-col justify-evenly text-white">
               <h2 className="text-[6.3vw]  md:text-3xl font-bold w-full text-center">
-                Traveler reviews
+                {home("travelerReviews")}
               </h2>
 
               {/* Illustration */}
