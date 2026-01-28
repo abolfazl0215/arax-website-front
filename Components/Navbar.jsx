@@ -50,7 +50,7 @@ const Navbar = () => {
     <>
       <nav
         className={`
-        fixed top-0 left-0 w-full z-50
+        fixed top-0 left-0 w-full z-40
         flex justify-between items-center
         px-[4vw] md:px-[8vw] pb-[3vw] md:pb-[1vw]
         transition-all duration-500 ease-in-out

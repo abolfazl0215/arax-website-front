@@ -9,8 +9,14 @@ const api = axios.create({
   },
 });
 
-// Store اصلی
+// Store اصلیg
 const useDataStore = create((set, get) => ({
+  isOpenBookingModal: false,
+  toggleBookingModal: () =>
+    set((state) => ({
+      isOpenBookingModal: !state.isOpenBookingModal,
+    })),
+
   // ==================== TOURS ====================
   tours: [],
   selectedTour: null,

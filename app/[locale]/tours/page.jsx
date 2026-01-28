@@ -27,8 +27,13 @@ const ToursPage = () => {
   const [activeCategory, setActiveCategory] = useState("All");
 
   // دریافت داده‌ها و توابع از store
-  const { tours, toursLoading, toursError, fetchTours } =
-    useDataStore();
+  const {
+    tours,
+    toursLoading,
+    toursError,
+    fetchTours,
+    toggleBookingModal,
+  } = useDataStore();
 
   const { language } = useLanguageStore();
 
@@ -117,90 +122,97 @@ const ToursPage = () => {
             <div className="max-w-7xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {filteredTours.map((tour) => (
-                  <Link
-                    href={`/${language.code || "en"}/tour/${tour._id}`}
+                  <div
                     key={tour._id}
                     className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 bg-white">
                     {/* Image */}
-                    <div className="relative h-56 overflow-hidden">
-                      <img
-                        src={
-                          tour.images && tour.images[0]
-                            ? tour.images[0]
-                            : "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop"
-                        }
-                        alt={tour.name}
-                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg">
-                        {tour.category || "Tour"}
+                    <Link
+                      href={`/${language.code || "en"}/tour/${tour._id}`}>
+                      <div className="relative h-56 overflow-hidden">
+                        <img
+                          src={
+                            tour.images && tour.images[0]
+                              ? tour.images[0]
+                              : "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop"
+                          }
+                          alt={tour.name}
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+                          {tour.category || "Tour"}
+                        </div>
+                        <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
+                          <DollarSign className="w-4 h-4 text-green-600" />
+                          <span className="font-bold text-gray-900">
+                            {tour.price && tour.price[0]
+                              ? `$${tour.price[0].price}`
+                              : "N/A"}
+                          </span>
+                          <span className="text-xs text-gray-600">
+                            / person
+                          </span>
+                        </div>
                       </div>
-                      <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
-                        <DollarSign className="w-4 h-4 text-green-600" />
-                        <span className="font-bold text-gray-900">
-                          {tour.price && tour.price[0]
-                            ? `$${tour.price[0].price}`
-                            : "N/A"}
-                        </span>
-                        <span className="text-xs text-gray-600">
-                          / person
-                        </span>
-                      </div>
-                    </div>
+                    </Link>
 
                     {/* Content */}
                     <div className="p-6">
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
-                        {tour.name}
-                      </h3>
+                      <Link
+                        href={`/${language.code || "en"}/tour/${tour._id}`}>
+                        <h3 className="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
+                          {tour.name}
+                        </h3>
 
-                      <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-2">
-                        {tour.description ||
-                          "No description available"}
-                      </p>
+                        <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-2">
+                          {tour.description ||
+                            "No description available"}
+                        </p>
 
-                      {/* Tour Details */}
-                      <div className="space-y-2.5 mb-5">
-                        <div className="flex items-center gap-2 text-sm text-gray-700">
-                          <Clock className="w-4 h-4 text-blue-500" />
-                          <span className="font-medium">
-                            Duration:
-                          </span>
-                          <span>{tour.duration || "N/A"}</span>
+                        {/* Tour Details */}
+                        <div className="space-y-2.5 mb-5">
+                          <div className="flex items-center gap-2 text-sm text-gray-700">
+                            <Clock className="w-4 h-4 text-blue-500" />
+                            <span className="font-medium">
+                              Duration:
+                            </span>
+                            <span>{tour.duration || "N/A"}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-gray-700">
+                            <Calendar className="w-4 h-4 text-blue-500" />
+                            <span className="font-medium">Time:</span>
+                            <span>
+                              {tour.startTime || "N/A"} -{" "}
+                              {tour.endTime || "N/A"}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-gray-700">
+                            <MapPin className="w-4 h-4 text-blue-500" />
+                            <span className="font-medium">
+                              Location:
+                            </span>
+                            <span>{tour.location || "N/A"}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-gray-700">
+                            <Users className="w-4 h-4 text-blue-500" />
+                            <span className="font-medium">
+                              Group size:
+                            </span>
+                            <span>{tour.groupSize || "N/A"}</span>
+                          </div>
                         </div>
-
-                        <div className="flex items-center gap-2 text-sm text-gray-700">
-                          <Calendar className="w-4 h-4 text-blue-500" />
-                          <span className="font-medium">Time:</span>
-                          <span>
-                            {tour.startTime || "N/A"} -{" "}
-                            {tour.endTime || "N/A"}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-sm text-gray-700">
-                          <MapPin className="w-4 h-4 text-blue-500" />
-                          <span className="font-medium">
-                            Location:
-                          </span>
-                          <span>{tour.location || "N/A"}</span>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-sm text-gray-700">
-                          <Users className="w-4 h-4 text-blue-500" />
-                          <span className="font-medium">
-                            Group size:
-                          </span>
-                          <span>{tour.groupSize || "N/A"}</span>
-                        </div>
-                      </div>
+                      </Link>
 
                       {/* Book Button */}
-                      <button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
+                      <button
+                        onClick={toggleBookingModal}
+                        className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
                         Book Now
                       </button>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
 

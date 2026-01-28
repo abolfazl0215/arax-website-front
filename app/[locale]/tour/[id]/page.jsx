@@ -33,6 +33,7 @@ export default function TourDetailPage() {
     toursLoading,
     toursError,
     clearSelectedTour,
+    toggleBookingModal,
   } = useDataStore();
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
@@ -143,7 +144,7 @@ export default function TourDetailPage() {
             <div className="relative">
               <Swiper
                 modules={[Navigation, Pagination, Thumbs]}
-                navigation
+                // navigation
                 pagination={{ clickable: true }}
                 thumbs={{
                   swiper:
@@ -470,7 +471,9 @@ export default function TourDetailPage() {
                   )}
                 </div>
 
-                <button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300 hover:scale-105 mb-4">
+                <button
+                  onClick={toggleBookingModal}
+                  className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300 hover:scale-105 mb-4">
                   Book Now
                 </button>
 

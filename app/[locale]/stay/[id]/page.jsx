@@ -26,7 +26,14 @@ export default function StayDetailPage() {
   const router = useRouter();
   const stayId = params.id;
 
-  const { selectedStay, fetchStayById, staysLoading, staysError, clearSelectedStay } = useDataStore();
+  const {
+    selectedStay,
+    fetchStayById,
+    staysLoading,
+    staysError,
+    clearSelectedStay,
+    toggleBookingModal,
+  } = useDataStore();
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   useEffect(() => {
@@ -63,7 +70,9 @@ export default function StayDetailPage() {
             <div className="flex items-start gap-4">
               <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading Stay</h3>
+                <h3 className="text-lg font-semibold text-red-800 mb-2">
+                  Error Loading Stay
+                </h3>
                 <p className="text-red-700">{staysError}</p>
                 <button
                   onClick={() => router.back()}
@@ -87,8 +96,12 @@ export default function StayDetailPage() {
         <div className="min-h-screen bg-[#f1f5f9] px-4 md:px-[10vw] py-16">
           <div className="text-center max-w-2xl mx-auto">
             <AlertCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Stay Not Found</h2>
-            <p className="text-gray-600 mb-6">The accommodation you're looking for doesn't exist.</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Stay Not Found
+            </h2>
+            <p className="text-gray-600 mb-6">
+              The accommodation you're looking for doesn't exist.
+            </p>
             <button
               onClick={() => router.back()}
               className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
@@ -102,7 +115,12 @@ export default function StayDetailPage() {
   }
 
   const stay = selectedStay;
-  const images = stay.images && stay.images.length > 0 ? stay.images : ["https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"];
+  const images =
+    stay.images && stay.images.length > 0
+      ? stay.images
+      : [
+          "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop",
+        ];
 
   return (
     <>
@@ -125,17 +143,21 @@ export default function StayDetailPage() {
             <div className="relative">
               <Swiper
                 modules={[Navigation, Pagination, Thumbs]}
-                navigation
+                // navigation
                 pagination={{ clickable: true }}
-                thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+                thumbs={{
+                  swiper:
+                    thumbsSwiper && !thumbsSwiper.destroyed
+                      ? thumbsSwiper
+                      : null,
+                }}
                 spaceBetween={10}
                 slidesPerView={1}
                 className="main-swiper"
-                style={{ 
+                style={{
                   "--swiper-navigation-color": "#3b82f6",
                   "--swiper-pagination-color": "#3b82f6",
-                }}
-              >
+                }}>
                 {images.map((image, index) => (
                   <SwiperSlide key={index}>
                     <div className="relative h-[50vh] md:h-[60vh] overflow-hidden">
@@ -159,7 +181,9 @@ export default function StayDetailPage() {
               {stay.starsCount > 0 && (
                 <div className="absolute top-4 left-4 bg-yellow-400/95 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-lg z-10">
                   <Star className="w-5 h-5 fill-yellow-600 text-yellow-600" />
-                  <span className="font-bold text-gray-800">{stay.starsCount}</span>
+                  <span className="font-bold text-gray-800">
+                    {stay.starsCount}
+                  </span>
                 </div>
               )}
             </div>
@@ -187,8 +211,7 @@ export default function StayDetailPage() {
                       spaceBetween: 16,
                     },
                   }}
-                  className="thumbs-swiper"
-                >
+                  className="thumbs-swiper">
                   {images.map((image, index) => (
                     <SwiperSlide key={index}>
                       <div className="cursor-pointer rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-all aspect-video">
@@ -250,7 +273,7 @@ export default function StayDetailPage() {
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                   {stay.name}
                 </h1>
-                
+
                 {stay.address && (
                   <div className="flex items-start gap-3 text-gray-600 mb-4">
                     <MapPin className="w-5 h-5 flex-shrink-0 mt-1 text-blue-500" />
@@ -261,7 +284,9 @@ export default function StayDetailPage() {
                 {stay.distanceToCenter && (
                   <div className="flex items-center gap-2 text-gray-600">
                     <NavigationIcon className="w-5 h-5 text-blue-500" />
-                    <span>{stay.distanceToCenter} km to city center</span>
+                    <span>
+                      {stay.distanceToCenter} km to city center
+                    </span>
                   </div>
                 )}
               </div>
@@ -269,7 +294,9 @@ export default function StayDetailPage() {
               {/* Description */}
               {stay.description && (
                 <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">About</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                    About
+                  </h2>
                   <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                     {stay.description}
                   </p>
@@ -278,7 +305,9 @@ export default function StayDetailPage() {
 
               {/* Property Details */}
               <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Property Details</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  Property Details
+                </h2>
                 <div className="grid grid-cols-2 gap-6">
                   {stay.square && (
                     <div className="flex items-center gap-3">
@@ -287,7 +316,9 @@ export default function StayDetailPage() {
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">Size</p>
-                        <p className="font-semibold text-gray-900">{stay.square} m²</p>
+                        <p className="font-semibold text-gray-900">
+                          {stay.square} m²
+                        </p>
                       </div>
                     </div>
                   )}
@@ -298,8 +329,12 @@ export default function StayDetailPage() {
                         <Star className="w-6 h-6 text-yellow-600" />
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Rating</p>
-                        <p className="font-semibold text-gray-900">{stay.starsCount} Stars</p>
+                        <p className="text-sm text-gray-600">
+                          Rating
+                        </p>
+                        <p className="font-semibold text-gray-900">
+                          {stay.starsCount} Stars
+                        </p>
                       </div>
                     </div>
                   )}
@@ -309,10 +344,14 @@ export default function StayDetailPage() {
               {/* Included Amenities */}
               {stay.included && stay.included.length > 0 && (
                 <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">What's Included</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    What's Included
+                  </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {stay.included.map((item, index) => (
-                      <div key={index} className="flex items-start gap-3">
+                      <div
+                        key={index}
+                        className="flex items-start gap-3">
                         <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                           <Check className="w-4 h-4 text-green-600" />
                         </div>
@@ -326,10 +365,14 @@ export default function StayDetailPage() {
               {/* Notes */}
               {stay.notes && stay.notes.length > 0 && (
                 <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Important Information</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    Important Information
+                  </h2>
                   <div className="space-y-3">
                     {stay.notes.map((note, index) => (
-                      <div key={index} className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg">
+                      <div
+                        key={index}
+                        className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg">
                         <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                         <p className="text-gray-700">{note}</p>
                       </div>
@@ -342,17 +385,23 @@ export default function StayDetailPage() {
             {/* Booking Sidebar */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg sticky top-24">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">Pricing</h3>
-                
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">
+                  Pricing
+                </h3>
+
                 {stay.price && stay.price.length > 0 ? (
                   <div className="space-y-4 mb-6">
                     {stay.price.map((priceRange, index) => (
-                      <div key={index} className="p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
+                      <div
+                        key={index}
+                        className="p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
                         <div className="flex items-baseline gap-2 mb-2">
                           <span className="text-3xl font-bold text-blue-600">
                             {priceRange.from}
                           </span>
-                          <span className="text-xl text-gray-600">-</span>
+                          <span className="text-xl text-gray-600">
+                            -
+                          </span>
                           <span className="text-3xl font-bold text-blue-600">
                             {priceRange.to}
                           </span>
@@ -360,17 +409,23 @@ export default function StayDetailPage() {
                             {priceRange.currency || "USD"}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600">per night</p>
+                        <p className="text-sm text-gray-600">
+                          per night
+                        </p>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="mb-6 p-4 bg-gray-50 rounded-lg text-center">
-                    <p className="text-gray-600">Contact for pricing</p>
+                    <p className="text-gray-600">
+                      Contact for pricing
+                    </p>
                   </div>
                 )}
 
-                <button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300 hover:scale-105 mb-4">
+                <button
+                  onClick={toggleBookingModal}
+                  className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300 hover:scale-105 mb-4">
                   Book Now
                 </button>
 

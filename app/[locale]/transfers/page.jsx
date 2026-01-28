@@ -8,6 +8,10 @@ import {
   Users,
   Shield,
   Clock,
+  X,
+  Phone,
+  Mail,
+  MessageCircle,
 } from "lucide-react";
 import Navbar from "../../../Components/Navbar";
 import Footer from "../../../Components/Footer";
@@ -35,6 +39,10 @@ const TransferPage = () => {
     to: "",
     when: "",
   });
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [showResultsModal, setShowResultsModal] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [formErrors, setFormErrors] = useState({});
 
   // دریافت داده‌ها و توابع از store
   const {
@@ -42,6 +50,7 @@ const TransferPage = () => {
     transfersLoading,
     transfersError,
     fetchTransfers,
+    toggleBookingModal
   } = useDataStore();
 
   // بارگذاری ترانسفرها هنگام mount شدن کامپوننت
@@ -49,22 +58,62 @@ const TransferPage = () => {
     fetchTransfers();
   }, [fetchTransfers]);
 
+  // تاریخ امروز برای محدود کردن انتخاب تاریخ‌های گذشته
+  const today = new Date().toISOString().slice(0, 16); // برای datetime-local
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+    // پاک کردن خطا هنگام تغییر
+    if (formErrors[name]) {
+      setFormErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
   };
 
   const handleSubmit = () => {
-    if (!formData.from || !formData.to || !formData.when) {
-      alert("Please fill in all fields");
+    // Validation
+    const errors = {};
+    if (!formData.from) {
+      errors.from = "Please select pickup location";
+    }
+    if (!formData.to) {
+      errors.to = "Please select destination";
+    }
+    if (!formData.when) {
+      errors.when = "Please select date and time";
+    }
+    if (
+      formData.from &&
+      formData.to &&
+      formData.from === formData.to
+    ) {
+      errors.to =
+        "Destination must be different from pickup location";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
       return;
     }
-    console.log("Transfer booking:", formData);
-    alert("Transfer request submitted! We will contact you shortly.");
+
+    // شروع جستجو با fake delay
+    setSearchLoading(true);
+    setFormErrors({});
+
+    setTimeout(() => {
+      // نمایش همه ترانسفرها (در واقعیت می‌توان فیلتر کرد)
+      setSearchResults(transfers);
+      setSearchLoading(false);
+      setShowResultsModal(true);
+    }, 1500); // 1.5 ثانیه delay
   };
+
 
   return (
     <div className="min-h-screen bg-[#f1f5f9]">
@@ -98,13 +147,17 @@ const TransferPage = () => {
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-blue-500" />
-                From
+                From <span className="text-red-500">*</span>
               </label>
               <select
                 name="from"
                 value={formData.from}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-700">
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-700 ${
+                  formErrors.from
+                    ? "border-red-500"
+                    : "border-gray-200"
+                }`}>
                 <option value="">Select pickup location</option>
                 {locations.map((location) => (
                   <option key={location} value={location}>
@@ -112,19 +165,26 @@ const TransferPage = () => {
                   </option>
                 ))}
               </select>
+              {formErrors.from && (
+                <p className="text-red-500 text-xs mt-1">
+                  {formErrors.from}
+                </p>
+              )}
             </div>
 
             {/* To */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-green-500" />
-                To
+                To <span className="text-red-500">*</span>
               </label>
               <select
                 name="to"
                 value={formData.to}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-700">
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-700 ${
+                  formErrors.to ? "border-red-500" : "border-gray-200"
+                }`}>
                 <option value="">Select destination</option>
                 {locations.map((location) => (
                   <option key={location} value={location}>
@@ -132,34 +192,184 @@ const TransferPage = () => {
                   </option>
                 ))}
               </select>
+              {formErrors.to && (
+                <p className="text-red-500 text-xs mt-1">
+                  {formErrors.to}
+                </p>
+              )}
             </div>
 
             {/* When */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-purple-500" />
-                When
+                When <span className="text-red-500">*</span>
               </label>
               <input
                 type="datetime-local"
                 name="when"
                 value={formData.when}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-700"
+                min={today}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-700 ${
+                  formErrors.when
+                    ? "border-red-500"
+                    : "border-gray-200"
+                }`}
               />
+              {formErrors.when && (
+                <p className="text-red-500 text-xs mt-1">
+                  {formErrors.when}
+                </p>
+              )}
             </div>
 
             {/* Submit Button */}
             <div className="md:col-span-3">
               <button
                 onClick={handleSubmit}
-                className="w-full md:w-auto px-8 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105">
-                Search Available Transfers
+                disabled={searchLoading}
+                className="w-full md:w-auto px-8 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2">
+                {searchLoading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Searching...</span>
+                  </>
+                ) : (
+                  "Search Available Transfers"
+                )}
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Search Results Modal */}
+      {showResultsModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-3xl bg-opacity-50 flex items-center justify-center z-40 p-4">
+          <div className="bg-white rounded-xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-6 border-b">
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  Available Vehicles ({searchResults.length})
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  {formData.from} → {formData.to} •{" "}
+                  {new Date(formData.when).toLocaleString()}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowResultsModal(false)}
+                className="text-gray-500 hover:text-gray-700 transition">
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="overflow-y-auto p-6">
+              {searchResults.length === 0 ? (
+                <div className="text-center py-12">
+                  <Car className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500 text-lg">
+                    No vehicles available for this route.
+                  </p>
+                  <p className="text-gray-400 text-sm mt-2">
+                    Please try different locations or contact us
+                    directly.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {searchResults.map((vehicle) => (
+                    <div
+                      key={vehicle._id}
+                      className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
+                      {/* Vehicle Image */}
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={
+                            vehicle.image ||
+                            "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop"
+                          }
+                          alt={vehicle.name}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+                          ${vehicle.pricePerKm || 0}/km
+                        </div>
+                      </div>
+
+                      {/* Vehicle Details */}
+                      <div className="p-4">
+                        <h3 className="text-lg font-bold text-gray-900 mb-3">
+                          {vehicle.name}
+                        </h3>
+
+                        {/* Specs */}
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center gap-2 text-sm text-gray-700">
+                            <Users className="w-4 h-4 text-blue-500" />
+                            <span>
+                              {vehicle.passengers || "N/A"} Passengers
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-gray-700">
+                            <Clock className="w-4 h-4 text-blue-500" />
+                            <span>
+                              {vehicle.releaseYear || "N/A"}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-gray-700">
+                            <Shield className="w-4 h-4 text-green-500" />
+                            <span>
+                              {vehicle.insurance
+                                ? "Full Coverage"
+                                : "Basic"}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Features */}
+                        {vehicle.features &&
+                          vehicle.features.length > 0 && (
+                            <div className="mb-4">
+                              <div className="flex flex-wrap gap-1.5">
+                                {vehicle.features
+                                  .slice(0, 3)
+                                  .map((feature, index) => (
+                                    <span
+                                      key={index}
+                                      className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">
+                                      {feature}
+                                    </span>
+                                  ))}
+                                {vehicle.features.length > 3 && (
+                                  <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                                    +{vehicle.features.length - 3}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                        {/* Select Button */}
+                        <button
+                          onClick={toggleBookingModal}
+                          className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
+                          Select Vehicle
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Loading State */}
       {transfersLoading && (
@@ -291,7 +501,9 @@ const TransferPage = () => {
                     )}
 
                   {/* Book Button */}
-                  <button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <button
+                    onClick={toggleBookingModal}
+                    className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
                     Select Vehicle
                   </button>
                 </div>

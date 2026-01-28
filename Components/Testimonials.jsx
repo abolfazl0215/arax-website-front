@@ -1,6 +1,8 @@
 "use client";
+import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import { motion, useInView } from "framer-motion";
 import { ChevronLeft, ChevronRight, Play, Star } from "lucide-react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -9,6 +11,8 @@ import { useTranslations } from "next-intl";
 
 export default function TravelerReviews() {
   const home = useTranslations("HomePage");
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const reviews = [
     {
@@ -47,19 +51,58 @@ export default function TravelerReviews() {
   ];
 
   return (
-    <section className="px-[4vw] md:px-[8vw] py-[8vw] md:py-[6vw]">
-      <div className="w-full bg-[#012710] grid-bg-dark py-[7vw] md:py-[2vw] pl-[6vw] md:pl-[3vw] rounded-xl md:rounded-3xl">
-        <div className=" mx-auto">
+    <motion.section
+      ref={ref}
+      className="px-[4vw] md:px-[8vw] py-[8vw] md:py-[6vw] w-full overflow-hidden"
+      initial={{ opacity: 0, y: 50 }}
+      animate={
+        isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
+      }
+      transition={{ duration: 0.6, ease: "easeOut" }}>
+      <motion.div
+        className="w-full bg-[#012710] grid-bg-dark py-[7vw] md:py-[2vw] pl-[6vw] md:pl-[3vw] rounded-xl md:rounded-3xl"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={
+          isInView
+            ? { opacity: 1, scale: 1 }
+            : { opacity: 0, scale: 0.95 }
+        }
+        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}>
+        <div className="mx-auto">
           {/* FLEX CONTAINER */}
           <div className="flex flex-col lg:flex-row gap-[2vw] items-center">
             {/* LEFT SECTION */}
-            <div className="w-full lg:w-[28%] flex  flex-col justify-evenly text-white">
-              <h2 className="text-[6.3vw]  md:text-3xl font-bold w-full text-center">
+            <motion.div
+              className="w-full lg:w-[28%] flex flex-col justify-evenly text-white"
+              initial={{ opacity: 0, x: -50 }}
+              animate={
+                isInView
+                  ? { opacity: 1, x: 0 }
+                  : { opacity: 0, x: -50 }
+              }
+              transition={{
+                duration: 0.6,
+                delay: 0.3,
+                ease: "easeOut",
+              }}>
+              <h2 className="text-[6.3vw] md:text-3xl font-bold w-full text-center">
                 {home("travelerReviews")}
               </h2>
 
               {/* Illustration */}
-              <div className="flex justify-center items-center relative">
+              <motion.div
+                className="flex justify-center items-center relative"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={
+                  isInView
+                    ? { opacity: 1, scale: 1 }
+                    : { opacity: 0, scale: 0.8 }
+                }
+                transition={{
+                  duration: 0.6,
+                  delay: 0.5,
+                  ease: "easeOut",
+                }}>
                 <Image
                   src="/images/testimoniall.png"
                   alt="Traveler"
@@ -67,21 +110,45 @@ export default function TravelerReviews() {
                   height={256}
                   className="w-52 object-contain hidden md:block"
                 />
-              </div>
+              </motion.div>
 
               {/* Navigation Buttons */}
-              <div className="hidden md:flex gap-8 justify-center mt-8">
+              <motion.div
+                className="hidden md:flex gap-8 justify-center mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={
+                  isInView
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: 20 }
+                }
+                transition={{
+                  duration: 0.5,
+                  delay: 0.6,
+                  ease: "easeOut",
+                }}>
                 <button className="review-button-prev w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer">
                   <ChevronLeft className="w-6 h-6 text-white" />
                 </button>
                 <button className="review-button-next w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer">
                   <ChevronRight className="w-6 h-6 text-white" />
                 </button>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             {/* RIGHT SECTION */}
-            <div className="w-full lg:w-[72%]">
+            <motion.div
+              className="w-full lg:w-[72%]"
+              initial={{ opacity: 0, x: 50 }}
+              animate={
+                isInView
+                  ? { opacity: 1, x: 0 }
+                  : { opacity: 0, x: 50 }
+              }
+              transition={{
+                duration: 0.6,
+                delay: 0.4,
+                ease: "easeOut",
+              }}>
               <Swiper
                 modules={[Navigation]}
                 spaceBetween={15}
@@ -95,9 +162,21 @@ export default function TravelerReviews() {
                     slidesPerView: 2.2,
                   },
                 }}>
-                {reviews.map((review) => (
+                {reviews.map((review, index) => (
                   <SwiperSlide key={review.id}>
-                    <div className="bg-white rounded-xl overflow-hidden shadow-xl h-full">
+                    <motion.div
+                      className="bg-white rounded-xl overflow-hidden shadow-xl h-full"
+                      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                      animate={
+                        isInView
+                          ? { opacity: 1, y: 0, scale: 1 }
+                          : { opacity: 0, y: 30, scale: 0.95 }
+                      }
+                      transition={{
+                        duration: 0.5,
+                        delay: 0.5 + index * 0.1,
+                        ease: "easeOut",
+                      }}>
                       {/* Video */}
                       <div className="relative h-56 bg-gray-900">
                         <img
@@ -157,14 +236,14 @@ export default function TravelerReviews() {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   </SwiperSlide>
                 ))}
               </Swiper>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }
