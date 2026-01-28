@@ -41,11 +41,11 @@ export default function FirstSectionLanding({
         animate={{ opacity: 1, x: 0, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}>
         <Image
-          src="/images/yerevan.png"
+          src="/images/yerevan.webp"
           className="w-full object-cover h-[50vw] md:h-70 rounded-tr-[40vw] rounded-br-[5vw] rounded-bl-[5vw] rounded-tl-[5vw] md:rounded-tr-2xl md:rounded-br-2xl md:rounded-bl-2xl md:rounded-tl-[150px]"
           alt="yerevan view"
-          width={1000}
-          height={1000}
+          width={600}
+          height={400}
         />
       </motion.div>
     </div>

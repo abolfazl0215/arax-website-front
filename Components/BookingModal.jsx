@@ -138,22 +138,7 @@ const BookingModal = () => {
                 </div>
               </div>
 
-              {/* Website */}
-              <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <div className="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                  <Globe size={20} className="text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Website</p>
-                  <a
-                    href={`https://${contacts.website}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-800 font-medium hover:text-purple-600 transition-colors">
-                    {contacts.website}
-                  </a>
-                </div>
-              </div>
+
             </div>
 
             {/* Footer */}
