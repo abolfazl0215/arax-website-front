@@ -20,37 +20,16 @@ export default function WhyAraksGroup() {
     home("whyAraksOption4"),
   ];
 
-  const images = [
-    {
-      id: 1,
-      src: "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&q=80",
-      alt: "Armenia sunset view",
-      className: "col-span-1 row-span-1",
-    },
-    {
-      id: 2,
-      src: "https://images.unsplash.com/photo-1589268954161-a8c4eb85d10e?w=800&q=80",
-      alt: "Mount Ararat",
-      className: "col-span-1 row-span-2",
-    },
-    {
-      id: 3,
-      src: "https://images.unsplash.com/photo-1555400082-b3b6eae80e98?w=800&q=80",
-      alt: "Yerevan city",
-      className: "col-span-2 row-span-1",
-    },
-  ];
-
   return (
     <motion.div
       ref={ref}
-      className="w-full mx-auto px-[4vw] md:px-[8vw] pb-[20vw] md:pb-[10vw] mt-[10vw] md:mt-[3vw]"
+      className="w-full mx-auto px-[4vw] md:px-[8vw] mb-[20vw] md:mb-[10vw] mt-[10vw] md:mt-[3vw]"
       initial={{ opacity: 0, y: 50 }}
       animate={
         isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
       }
       transition={{ duration: 0.6, ease: "easeOut" }}>
-      <div className="flex flex-wrap justify-between gap-15 items-center">
+      <div className="flex flex-wrap justify-between gap-[10vw] items-center">
         {/* Left Content */}
         <motion.div
           className="flex-1 order-1"
@@ -88,7 +67,7 @@ export default function WhyAraksGroup() {
           </motion.p>
 
           {/* Features List */}
-          <div className="space-y-4 mb-10">
+          <div className="space-y-4 mb-10 ">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
@@ -138,7 +117,7 @@ export default function WhyAraksGroup() {
 
         {/* Right Images Grid */}
         <motion.div
-          className="w-[40%] order-2 hidden md:block"
+          className="w-[35%] order-2 hidden md:block "
           initial={{ opacity: 0, x: 50 }}
           animate={
             isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }
@@ -171,9 +150,9 @@ export default function WhyAraksGroup() {
               <Image
                 width={200}
                 height={200}
-                src="https://res.cloudinary.com/dtakyi9mf/image/upload/v1768893218/pexels-arthousestudio-4530180_b7otjf.jpg"
+                src="/images/why1.webp"
                 alt="Armenia landscape"
-                className="w-full object-cover rounded-lg"
+                className="w-full h-40 object-cover rounded-xl"
               />
             </motion.div>
             <motion.div
@@ -192,9 +171,9 @@ export default function WhyAraksGroup() {
               <Image
                 width={200}
                 height={200}
-                src="https://res.cloudinary.com/dtakyi9mf/image/upload/v1768893282/pexels-artem-makarov-289670876-30454809_smwgcu.jpg"
+                src="/images/why2.webp"
                 alt="Armenia landscape"
-                className="w-full object-cover rounded-lg h-full"
+                className="w-full object-cover rounded-xl h-64"
               />
             </motion.div>
           </motion.div>
@@ -211,7 +190,7 @@ export default function WhyAraksGroup() {
             <Image
               width={200}
               height={200}
-              src="https://res.cloudinary.com/dtakyi9mf/image/upload/v1768893004/pexels-roboseal34-34030755_iwseth.jpg"
+                src="/images/why3.webp"
               alt="Armenia landscape"
               className="w-full mt-3 h-30 object-cover rounded-xl shadow-lg"
             />
