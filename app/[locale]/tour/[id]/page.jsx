@@ -21,6 +21,7 @@ import {
 import Navbar from "../../../../Components/Navbar";
 import Footer from "../../../../Components/Footer";
 import useDataStore from "../../../../stores/useDataStore"; // مسیر store را به درستی تنظیم کنید
+import { useLanguageStore } from "../../../../stores/useLanguageStore";
 
 export default function TourDetailPage() {
   const params = useParams();
@@ -35,6 +36,7 @@ export default function TourDetailPage() {
     clearSelectedTour,
     toggleBookingModal,
   } = useDataStore();
+  const { language, currency } = useLanguageStore();
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   useEffect(() => {
@@ -413,23 +415,28 @@ export default function TourDetailPage() {
                 {/* Pricing */}
                 {tour.price && tour.price.length > 0 ? (
                   <div className="mb-6">
-                    {tour.price.map((priceItem, index) => (
-                      <div
-                        key={index}
-                        className="p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100 mb-3">
-                        <div className="flex items-baseline gap-2 mb-1">
-                          <span className="text-3xl font-bold text-blue-600">
-                            ${priceItem.price}
-                          </span>
-                          <span className="text-sm text-gray-600">
-                            {priceItem.currency || "USD"}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          per person
-                        </p>
+                    <div className="p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100 mb-3">
+                      <div className="flex items-baseline gap-2 mb-1">
+                        {tour.price?.length > 0 &&
+                          (() => {
+                            const matchedPrice = tour.price.find(
+                              (p) => p.currency === currency.code,
+                            );
+
+                            return matchedPrice ? (
+                              <>
+                                <span>{matchedPrice.price} </span>
+                                <span className="text-green-700 font-semibold">
+                                  {currency.symbol}
+                                </span>
+                              </>
+                            ) : null;
+                          })()}
                       </div>
-                    ))}
+                      <p className="text-sm text-gray-600">
+                        per person
+                      </p>
+                    </div>
                   </div>
                 ) : (
                   <div className="mb-6 p-4 bg-gray-50 rounded-lg text-center">
@@ -477,9 +484,9 @@ export default function TourDetailPage() {
                   Book Now
                 </button>
 
-                <button className="w-full border-2 border-blue-500 text-blue-500 py-4 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300">
+                {/* <button className="w-full border-2 border-blue-500 text-blue-500 py-4 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300">
                   Contact Guide
-                </button>
+                </button> */}
 
                 <div className="mt-6 pt-6 border-t border-gray-200">
                   <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">

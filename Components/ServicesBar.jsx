@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import { X, Phone, Mail, MessageCircle, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
-import useDataStore from "../stores/useDataStore"; // مسیر store را به درستی تنظیم کنید
+import useDataStore from "../stores/useDataStore";
+import { useLanguageStore } from "../stores/useLanguageStore";
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
@@ -17,12 +18,10 @@ const ServicesBar = () => {
   const [activeTab, setActiveTab] = useState("tours");
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  // const [showContactModal, setShowContactModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [errors, setErrors] = useState({});
 
-  // دریافت داده‌ها از store
   const {
     tours,
     stays,
@@ -35,18 +34,16 @@ const ServicesBar = () => {
     transfersLoading,
     toggleBookingModal,
   } = useDataStore();
+  const { currency } = useLanguageStore();
 
-  // بارگذاری داده‌ها هنگام mount
   useEffect(() => {
     fetchTours();
     fetchStays();
     fetchTransfers();
   }, [fetchTours, fetchStays, fetchTransfers]);
 
-  // تاریخ امروز برای محدود کردن انتخاب تاریخ‌های گذشته
   const today = new Date().toISOString().split("T")[0];
 
-  // استخراج location های یونیک از داده‌ها
   const tourLocations = [
     "All",
     ...new Set(tours.map((tour) => tour.location).filter(Boolean)),
@@ -64,7 +61,6 @@ const ServicesBar = () => {
     "Dilijan",
   ];
 
-  // استخراج category های یونیک
   const tourTypes = [
     "All",
     ...new Set(tours.map((tour) => tour.category).filter(Boolean)),
@@ -131,7 +127,6 @@ const ServicesBar = () => {
 
     setLoading(true);
 
-    // فیلتر کردن نتایج بر اساس انتخاب کاربر
     setTimeout(() => {
       setLoading(false);
       let results = [];
@@ -163,7 +158,7 @@ const ServicesBar = () => {
           return typeMatch && locationMatch;
         });
       } else if (activeTab === "transfers") {
-        results = transfers; // همه ترانسفرها را نشان می‌دهیم
+        results = transfers;
       }
 
       setSearchResults(results);
@@ -177,365 +172,376 @@ const ServicesBar = () => {
   };
 
   return (
-    <motion.section
-      ref={ref}
-      className="px-[4vw] md:px-[8vw] pb-[19vw] md:py-[5vw] md:pb-[8vw]"
-      initial={{ opacity: 0, y: 50 }}
-      animate={
-        isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
-      }
-      transition={{ duration: 0.6, ease: "easeOut" }}>
+    <section className="w-full overflow-hidden">
       <motion.div
-        className="bg-white w-full rounded-xl pt-3 pb-6 px-4 sm:px-6 md:px-8 shadow-sm"
-        initial={{ opacity: 0, scale: 0.95 }}
+        ref={ref}
+        className="px-[4vw] md:px-[8vw] pb-[19vw] md:py-[5vw] md:pb-[8vw]"
+        initial={{ opacity: 0, y: 50 }}
         animate={
-          isInView
-            ? { opacity: 1, scale: 1 }
-            : { opacity: 0, scale: 0.95 }
+          isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
         }
-        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}>
-        {/* Tabs */}
-        <motion.ul
-          className="flex flex-wrap gap-2 sm:gap-6 md:gap-10 justify-center items-center border-b border-gray-200 text-[#4B4B4B] pb-3"
-          initial={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}>
+        <motion.div
+          className="bg-white w-full rounded-xl pt-3 pb-6 px-4 sm:px-6 md:px-8 shadow-sm"
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={
-            isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }
+            isInView
+              ? { opacity: 1, scale: 1 }
+              : { opacity: 0, scale: 0.95 }
           }
-          transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}>
-          <li
-            onClick={() => setActiveTab("stays")}
-            className={`cursor-pointer transition-all hover:text-teal-600 rounded-lg p-1 px-3 sm:px-5 text-sm sm:text-base ${
-              activeTab === "stays" ? "bg-teal-900/7 text-black " : ""
-            }`}>
-            {home("stays")}
-          </li>
-          <li
-            onClick={() => setActiveTab("tours")}
-            className={`cursor-pointer transition-all hover:text-teal-600 rounded-lg p-1 px-3 sm:px-5 text-sm sm:text-base ${
-              activeTab === "tours" ? "bg-teal-900/7 text-black " : ""
-            }`}>
-            {home("tours")}
-          </li>
-          <li
-            onClick={() => setActiveTab("transfers")}
-            className={`cursor-pointer transition-all hover:text-teal-600 rounded-lg p-1 px-3 sm:px-5 text-sm sm:text-base ${
-              activeTab === "transfers"
-                ? "bg-teal-900/7 text-black "
-                : ""
-            }`}>
-            {home("transfers")}
-          </li>
-        </motion.ul>
+          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}>
+          {/* Tabs */}
+          <motion.ul
+            className="flex flex-wrap gap-2 sm:gap-6 md:gap-10 justify-center items-center border-b border-gray-200 text-[#4B4B4B] pb-3"
+            initial={{ opacity: 0, y: -20 }}
+            animate={
+              isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }
+            }
+            transition={{
+              duration: 0.5,
+              delay: 0.3,
+              ease: "easeOut",
+            }}>
+            <li
+              onClick={() => setActiveTab("stays")}
+              className={`cursor-pointer transition-all hover:text-teal-600 rounded-lg p-1 px-3 sm:px-5 text-sm sm:text-base ${
+                activeTab === "stays"
+                  ? "bg-teal-900/7 text-black "
+                  : ""
+              }`}>
+              {home("stays")}
+            </li>
+            <li
+              onClick={() => setActiveTab("tours")}
+              className={`cursor-pointer transition-all hover:text-teal-600 rounded-lg p-1 px-3 sm:px-5 text-sm sm:text-base ${
+                activeTab === "tours"
+                  ? "bg-teal-900/7 text-black "
+                  : ""
+              }`}>
+              {home("tours")}
+            </li>
+            <li
+              onClick={() => setActiveTab("transfers")}
+              className={`cursor-pointer transition-all hover:text-teal-600 rounded-lg p-1 px-3 sm:px-5 text-sm sm:text-base ${
+                activeTab === "transfers"
+                  ? "bg-teal-900/7 text-black "
+                  : ""
+              }`}>
+              {home("transfers")}
+            </li>
+          </motion.ul>
 
-        {/* Stays Tab */}
-        {activeTab === "stays" && (
-          <motion.div
-            className="mt-6 md:mt-8 flex flex-col md:flex-row gap-4 md:gap-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="staysType"
-                className="text-sm text-gray-700 block">
-                {home("staysType")}
-              </label>
-              <select
-                className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2 capitalize"
-                name="staysType"
-                id="staysType">
-                {staysTypes.map((type) => (
-                  <option
-                    key={type}
-                    value={type.toLowerCase()}
-                    className="capitalize">
-                    {type}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs mt-1 h-[20px] opacity-0">
-                Placeholder
-              </p>
-            </div>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="staysLocation"
-                className="text-sm text-gray-700 block">
-                {home("whereAreYouGoing")}
-              </label>
-              <select
-                className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
-                name="staysLocation"
-                id="staysLocation">
-                {staysLocations.map((location) => (
-                  <option
-                    key={location}
-                    value={location.toLowerCase()}>
-                    {location}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs mt-1 h-[20px] opacity-0">
-                Placeholder
-              </p>
-            </div>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="checkIn"
-                className="text-sm text-gray-700 block">
-                {home("checkIn")}{" "}
-                <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                id="checkIn"
-                min={today}
-                className={`border w-full mt-2 p-2 rounded-lg ${
-                  errors.checkIn
-                    ? "border-red-500"
-                    : "border-slate-300"
-                }`}
-              />
-              <p
-                className={`text-xs mt-1 h-[20px] ${errors.checkIn ? "text-red-500" : "opacity-0"}`}>
-                {errors.checkIn || "Placeholder"}
-              </p>
-            </div>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="checkOut"
-                className="text-sm text-gray-700 block">
-                {home("checkOut")}{" "}
-                <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                id="checkOut"
-                min={today}
-                className={`border w-full mt-2 p-2 rounded-lg ${
-                  errors.checkOut
-                    ? "border-red-500"
-                    : "border-slate-300"
-                }`}
-              />
-              <p
-                className={`text-xs mt-1 h-[20px] ${errors.checkOut ? "text-red-500" : "opacity-0"}`}>
-                {errors.checkOut || "Placeholder"}
-              </p>
-            </div>
-            <div className="flex-shrink-0">
-              <button
-                onClick={handleSearch}
-                disabled={loading || staysLoading}
-                className="bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer text-white px-6 py-2 rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed h-[42px] flex items-center justify-center mt-[30px]">
-                {loading || staysLoading ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  home("search")
-                )}
-              </button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Tours Tab */}
-        {activeTab === "tours" && (
-          <motion.div
-            className="mt-6 md:mt-8 flex flex-col md:flex-row gap-4 md:gap-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="tourType"
-                className="text-sm text-gray-700 block">
-                {home("tourType")}
-              </label>
-              <select
-                className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
-                name="tourType"
-                id="tourType">
-                {tourTypes.map((type) => (
-                  <option key={type} value={type.toLowerCase()}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs mt-1 h-[20px] opacity-0">
-                Placeholder
-              </p>
-            </div>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="tourLocation"
-                className="text-sm text-gray-700 block">
-                {home("whereAreYouGoing")}
-              </label>
-              <select
-                className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
-                name="tourLocation"
-                id="tourLocation">
-                {tourLocations.map((location) => (
-                  <option
-                    key={location}
-                    value={location.toLowerCase()}>
-                    {location}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs mt-1 h-[20px] opacity-0">
-                Placeholder
-              </p>
-            </div>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="startingDate"
-                className="text-sm text-gray-700 block">
-                {home("startingDate")}{" "}
-                <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                id="startingDate"
-                min={today}
-                className={`border w-full mt-2 p-2 rounded-lg ${
-                  errors.startingDate
-                    ? "border-red-500"
-                    : "border-slate-300"
-                }`}
-              />
-              <p
-                className={`text-xs mt-1 h-[20px] ${errors.startingDate ? "text-red-500" : "opacity-0"}`}>
-                {errors.startingDate || "Placeholder"}
-              </p>
-            </div>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="endingDate"
-                className="text-sm text-gray-700 block">
-                {home("endingDate")}{" "}
-                <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                id="endingDate"
-                min={today}
-                className={`border w-full mt-2 p-2 rounded-lg ${
-                  errors.endingDate
-                    ? "border-red-500"
-                    : "border-slate-300"
-                }`}
-              />
-              <p
-                className={`text-xs mt-1 h-[20px] ${errors.endingDate ? "text-red-500" : "opacity-0"}`}>
-                {errors.endingDate || "Placeholder"}
-              </p>
-            </div>
-            <div className="flex-shrink-0">
-              <button
-                onClick={handleSearch}
-                disabled={loading || toursLoading}
-                className="bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer text-white px-6 py-2 rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed h-[42px] flex items-center justify-center mt-[30px]">
-                {loading || toursLoading ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  home("search")
-                )}
-              </button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Transfers Tab */}
-        {activeTab === "transfers" && (
-          <motion.div
-            className="mt-6 md:mt-8 flex flex-col md:flex-row md:items-end gap-4 md:gap-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="transferFrom"
-                className="text-sm text-gray-700">
-                {home("from")}
-              </label>
-              <select
-                className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
-                name="transferFrom"
-                id="transferFrom">
-                {transferLocations.map((location) => (
-                  <option
-                    key={location}
-                    value={location.toLowerCase()}>
-                    {location}
-                  </option>
-                ))}
-              </select>
-              <p className=" text-xs mt-1 min-h-[16px]"></p>
-            </div>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="transferTo"
-                className="text-sm text-gray-700">
-                {home("to")}
-              </label>
-              <select
-                className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
-                name="transferTo"
-                id="transferTo">
-                {transferLocations.map((location) => (
-                  <option
-                    key={location}
-                    value={location.toLowerCase()}>
-                    {location}
-                  </option>
-                ))}
-              </select>
-              <p className=" text-xs mt-1 min-h-[16px]"></p>
-            </div>
-            <div className="flex-1 w-full">
-              <label
-                htmlFor="transferWhen"
-                className="text-sm text-gray-700">
-                {home("when")} <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                id="transferWhen"
-                min={today}
-                className={`border w-full mt-2 p-2 rounded-lg ${
-                  errors.transferWhen
-                    ? "border-red-500"
-                    : "border-slate-300"
-                }`}
-              />
-              {errors.transferWhen && (
-                <p className="text-red-500 text-xs mt-1 min-h-[16px]">
-                  {errors.transferWhen}
+          {/* Stays Tab */}
+          {activeTab === "stays" && (
+            <motion.div
+              className="mt-6 md:mt-8 flex flex-col md:flex-row gap-4 md:gap-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="staysType"
+                  className="text-sm text-gray-700 block">
+                  {home("staysType")}
+                </label>
+                <select
+                  className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2 capitalize"
+                  name="staysType"
+                  id="staysType">
+                  {staysTypes.map((type) => (
+                    <option
+                      key={type}
+                      value={type.toLowerCase()}
+                      className="capitalize">
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs mt-1 h-[20px] opacity-0">
+                  Placeholder
                 </p>
-              )}
-              {!errors.transferWhen && (
-                <div className="min-h-[16px] mt-1"></div>
-              )}
-            </div>
-            <div>
-              <button
-                onClick={handleSearch}
-                disabled={loading || transfersLoading}
-                className="bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer text-white px-6 p-2 rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed h-[42px] flex items-center justify-center">
-                {loading || transfersLoading ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  home("search")
+              </div>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="staysLocation"
+                  className="text-sm text-gray-700 block">
+                  {home("whereAreYouGoing")}
+                </label>
+                <select
+                  className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
+                  name="staysLocation"
+                  id="staysLocation">
+                  {staysLocations.map((location) => (
+                    <option
+                      key={location}
+                      value={location.toLowerCase()}>
+                      {location}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs mt-1 h-[20px] opacity-0">
+                  Placeholder
+                </p>
+              </div>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="checkIn"
+                  className="text-sm text-gray-700 block">
+                  {home("checkIn")}{" "}
+                  <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="checkIn"
+                  min={today}
+                  className={`border w-full mt-2 p-2 rounded-lg ${
+                    errors.checkIn
+                      ? "border-red-500"
+                      : "border-slate-300"
+                  }`}
+                />
+                <p
+                  className={`text-xs mt-1 h-[20px] ${errors.checkIn ? "text-red-500" : "opacity-0"}`}>
+                  {errors.checkIn || "Placeholder"}
+                </p>
+              </div>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="checkOut"
+                  className="text-sm text-gray-700 block">
+                  {home("checkOut")}{" "}
+                  <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="checkOut"
+                  min={today}
+                  className={`border w-full mt-2 p-2 rounded-lg ${
+                    errors.checkOut
+                      ? "border-red-500"
+                      : "border-slate-300"
+                  }`}
+                />
+                <p
+                  className={`text-xs mt-1 h-[20px] ${errors.checkOut ? "text-red-500" : "opacity-0"}`}>
+                  {errors.checkOut || "Placeholder"}
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <button
+                  onClick={handleSearch}
+                  disabled={loading || staysLoading}
+                  className="bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer text-white px-6 py-2 rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed h-[42px] flex items-center justify-center mt-[30px]">
+                  {loading || staysLoading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    home("search")
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Tours Tab */}
+          {activeTab === "tours" && (
+            <motion.div
+              className="mt-6 md:mt-8 flex flex-col md:flex-row gap-4 md:gap-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="tourType"
+                  className="text-sm text-gray-700 block">
+                  {home("tourType")}
+                </label>
+                <select
+                  className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
+                  name="tourType"
+                  id="tourType">
+                  {tourTypes.map((type) => (
+                    <option key={type} value={type.toLowerCase()}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs mt-1 h-[20px] opacity-0">
+                  Placeholder
+                </p>
+              </div>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="tourLocation"
+                  className="text-sm text-gray-700 block">
+                  {home("whereAreYouGoing")}
+                </label>
+                <select
+                  className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
+                  name="tourLocation"
+                  id="tourLocation">
+                  {tourLocations.map((location) => (
+                    <option
+                      key={location}
+                      value={location.toLowerCase()}>
+                      {location}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs mt-1 h-[20px] opacity-0">
+                  Placeholder
+                </p>
+              </div>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="startingDate"
+                  className="text-sm text-gray-700 block">
+                  {home("startingDate")}{" "}
+                  <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="startingDate"
+                  min={today}
+                  className={`border w-full mt-2 p-2 rounded-lg ${
+                    errors.startingDate
+                      ? "border-red-500"
+                      : "border-slate-300"
+                  }`}
+                />
+                <p
+                  className={`text-xs mt-1 h-[20px] ${errors.startingDate ? "text-red-500" : "opacity-0"}`}>
+                  {errors.startingDate || "Placeholder"}
+                </p>
+              </div>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="endingDate"
+                  className="text-sm text-gray-700 block">
+                  {home("endingDate")}{" "}
+                  <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="endingDate"
+                  min={today}
+                  className={`border w-full mt-2 p-2 rounded-lg ${
+                    errors.endingDate
+                      ? "border-red-500"
+                      : "border-slate-300"
+                  }`}
+                />
+                <p
+                  className={`text-xs mt-1 h-[20px] ${errors.endingDate ? "text-red-500" : "opacity-0"}`}>
+                  {errors.endingDate || "Placeholder"}
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <button
+                  onClick={handleSearch}
+                  disabled={loading || toursLoading}
+                  className="bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer text-white px-6 py-2 rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed h-[42px] flex items-center justify-center mt-[30px]">
+                  {loading || toursLoading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    home("search")
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Transfers Tab */}
+          {activeTab === "transfers" && (
+            <motion.div
+              className="mt-6 md:mt-8 flex flex-col md:flex-row md:items-end gap-4 md:gap-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="transferFrom"
+                  className="text-sm text-gray-700">
+                  {home("from")}
+                </label>
+                <select
+                  className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
+                  name="transferFrom"
+                  id="transferFrom">
+                  {transferLocations.map((location) => (
+                    <option
+                      key={location}
+                      value={location.toLowerCase()}>
+                      {location}
+                    </option>
+                  ))}
+                </select>
+                <p className=" text-xs mt-1 min-h-[16px]"></p>
+              </div>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="transferTo"
+                  className="text-sm text-gray-700">
+                  {home("to")}
+                </label>
+                <select
+                  className="border w-full border-slate-300 p-2 rounded-lg px-2 mt-2"
+                  name="transferTo"
+                  id="transferTo">
+                  {transferLocations.map((location) => (
+                    <option
+                      key={location}
+                      value={location.toLowerCase()}>
+                      {location}
+                    </option>
+                  ))}
+                </select>
+                <p className=" text-xs mt-1 min-h-[16px]"></p>
+              </div>
+              <div className="flex-1 w-full">
+                <label
+                  htmlFor="transferWhen"
+                  className="text-sm text-gray-700">
+                  {home("when")}{" "}
+                  <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="transferWhen"
+                  min={today}
+                  className={`border w-full mt-2 p-2 rounded-lg ${
+                    errors.transferWhen
+                      ? "border-red-500"
+                      : "border-slate-300"
+                  }`}
+                />
+                {errors.transferWhen && (
+                  <p className="text-red-500 text-xs mt-1 min-h-[16px]">
+                    {errors.transferWhen}
+                  </p>
                 )}
-              </button>
-              <p className=" text-xs mt-1 min-h-[16px]"></p>
-            </div>
-          </motion.div>
-        )}
+                {!errors.transferWhen && (
+                  <div className="min-h-[16px] mt-1"></div>
+                )}
+              </div>
+              <div>
+                <button
+                  onClick={handleSearch}
+                  disabled={loading || transfersLoading}
+                  className="bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer text-white px-6 p-2 rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed h-[42px] flex items-center justify-center">
+                  {loading || transfersLoading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    home("search")
+                  )}
+                </button>
+                <p className=" text-xs mt-1 min-h-[16px]"></p>
+              </div>
+            </motion.div>
+          )}
+        </motion.div>
       </motion.div>
 
       {/* Results Modal */}
@@ -700,14 +706,58 @@ const ServicesBar = () => {
                             {activeTab === "stays" &&
                             item.price &&
                             item.price[0]
-                              ? `$${item.price[0].from}-${item.price[0].to}`
+                              ? (() => {
+                                  const matchedPrice =
+                                    item.price.find(
+                                      (p) =>
+                                        p.currency === currency.code,
+                                    );
+
+                                  return matchedPrice ? (
+                                    <span>
+                                      {matchedPrice.from}
+                                      {"-"}
+                                      {matchedPrice.to}
+                                      {currency.symbol}
+                                    </span>
+                                  ) : null;
+                                })()
                               : activeTab === "tours" &&
                                   item.price &&
                                   item.price[0]
-                                ? `$${item.price[0].price}`
+                                ? (() => {
+                                    const matchedPrice =
+                                      item.price.find(
+                                        (p) =>
+                                          p.currency ===
+                                          currency.code,
+                                      );
+
+                                    return matchedPrice ? (
+                                      <span>
+                                        {matchedPrice.price}{" "}
+                                        {currency.symbol}
+                                      </span>
+                                    ) : null;
+                                  })()
                                 : activeTab === "transfers" &&
+                                    item.pricePerKm &&
                                     item.pricePerKm
-                                  ? `$${item.pricePerKm}/km`
+                                  ? (() => {
+                                      const matchedPrice =
+                                        item.pricePerKm.find(
+                                          (p) =>
+                                            p.currency ===
+                                            currency.code,
+                                        );
+
+                                      return matchedPrice ? (
+                                        <span>
+                                          {matchedPrice.price}
+                                          {currency.symbol} {" /km "}
+                                        </span>
+                                      ) : null;
+                                    })()
                                   : "Contact for price"}
                           </span>
                           <button
@@ -725,7 +775,7 @@ const ServicesBar = () => {
           </div>
         </div>
       )}
-    </motion.section>
+    </section>
   );
 };
 

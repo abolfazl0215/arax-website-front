@@ -34,7 +34,6 @@ const MainPage = async ({ params }) => {
 
   return (
     <>
-      
       <header className="px-[4vw] md:px-[8vw] w-full grid-bg pb-[22vw] md:pb-[5vw]">
         <Navbar locale={locale} />
         <FirstSectionLanding
@@ -54,7 +53,7 @@ const MainPage = async ({ params }) => {
         <WhyAraksGroup />
         <SpecialStays />
         <Transfers />
-        <Footer />
+       <Footer />
       </main>
       <footer></footer>
     </>

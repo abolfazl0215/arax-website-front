@@ -20,7 +20,7 @@ const StaysPage = () => {
   // دریافت داده‌ها و توابع از store
   const { stays, staysLoading, staysError, fetchStays } =
     useDataStore();
-  const { language } = useLanguageStore();
+  const { language, currency } = useLanguageStore();
 
   // بارگذاری اقامتگاه‌ها هنگام mount شدن کامپوننت
   useEffect(() => {
@@ -106,7 +106,7 @@ const StaysPage = () => {
 
       {/* Stays Grid Section */}
       {!staysLoading && !staysError && (
-        <div className="w-full bg-gray-50 px-4 md:px-[8vw] py-12 md:py-16">
+        <div className="w-full px-4 md:px-[8vw] py-12 md:py-16">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {filteredStays.map((stay) => (
@@ -129,7 +129,7 @@ const StaysPage = () => {
 
                     {/* Star Rating Badge */}
                     {stay.starsCount > 0 && (
-                      <div className="absolute top-3 left-3 bg-yellow-400/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-gray-800 flex items-center gap-1">
+                      <div className="absolute top-3 left-3 bg-yellow-100 border border-yellow-400 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-gray-800 flex items-center gap-1">
                         <span>⭐</span>
                         <span>{stay.starsCount}</span>
                       </div>
@@ -220,12 +220,23 @@ const StaysPage = () => {
                           Price Range:
                         </div>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-lg font-bold text-blue-600">
-                            {stay.price[0].from} - {stay.price[0].to}
-                          </span>
-                          <span className="text-sm text-gray-600">
-                            {stay.price[0].currency || "USD"}
-                          </span>
+                          {stay.price?.length > 0 &&
+                            (() => {
+                              const matchedPrice = stay.price.find(
+                                (p) => p.currency === currency.code,
+                              );
+
+                              return matchedPrice ? (
+                                <>
+                                  <span className="text-lg font-bold text-blue-600">
+                                    {matchedPrice.from}{" - "}{matchedPrice.to}
+                                  </span>
+                                  <span className="text-sm text-gray-600">
+                                    {currency.symbol}
+                                  </span>
+                                </>
+                              ) : null;
+                            })()}
                         </div>
                       </div>
                     )}

@@ -22,7 +22,7 @@ import Image from "next/image";
 export default function SpecialTours() {
   const { tours, toursLoading, fetchTours, toggleBookingModal } =
     useDataStore();
-  const { language } = useLanguageStore();
+  const { language, currency } = useLanguageStore();
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
@@ -136,11 +136,21 @@ export default function SpecialTours() {
                           {tour.category || "Tour"}
                         </div>
                         <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-3 md:px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
-                          <DollarSign className="w-3 h-3 md:w-4 md:h-4 text-green-600" />
+                          {/* <DollarSign className="w-3 h-3 md:w-4 md:h-4 text-green-600" /> */}
                           <span className="font-bold text-gray-900 text-sm md:text-base">
-                            {tour.price && tour.price[0]
-                              ? `$${tour.price[0].price}`
-                              : "N/A"}
+                            {tour.price?.length > 0 &&
+                              (() => {
+                                const matchedPrice = tour.price.find(
+                                  (p) => p.currency === currency.code,
+                                );
+
+                                return matchedPrice ? (
+                                  <span>
+                                    {matchedPrice.price}{" "}
+                                    {currency.symbol}
+                                  </span>
+                                ) : null;
+                              })()}
                           </span>
                           <span className="text-xs text-gray-600">
                             / person

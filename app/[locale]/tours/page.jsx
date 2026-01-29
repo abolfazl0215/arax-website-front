@@ -35,7 +35,7 @@ const ToursPage = () => {
     toggleBookingModal,
   } = useDataStore();
 
-  const { language } = useLanguageStore();
+  const { language, currency } = useLanguageStore();
 
   // بارگذاری تورها هنگام mount شدن کامپوننت
   useEffect(() => {
@@ -142,11 +142,28 @@ const ToursPage = () => {
                           {tour.category || "Tour"}
                         </div>
                         <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
-                          <DollarSign className="w-4 h-4 text-green-600" />
+                          
                           <span className="font-bold text-gray-900">
-                            {tour.price && tour.price[0]
+                            {/* {tour.price && tour.price[0]
                               ? `$${tour.price[0].price}`
-                              : "N/A"}
+                              : "N/A"} */}
+                            {tour.price?.length > 0 &&
+                              (() => {
+                                const matchedPrice = tour.price.find(
+                                  (p) => p.currency === currency.code,
+                                );
+
+                                return matchedPrice ? (
+                                  <>
+                                  <span>
+                                    {matchedPrice.price}{" "}
+                                  </span>
+                                  <span className="text-green-700 font-semibold">
+                                    {currency.symbol}
+                                  </span></>
+                                    
+                                ) : null;
+                              })()}
                           </span>
                           <span className="text-xs text-gray-600">
                             / person

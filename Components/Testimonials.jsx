@@ -70,7 +70,7 @@ export default function TravelerReviews() {
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}>
         <div className="mx-auto">
           {/* FLEX CONTAINER */}
-          <div className="flex flex-col lg:flex-row gap-[2vw] items-center">
+          <div className="flex flex-col  lg:flex-row gap-[2vw] items-center">
             {/* LEFT SECTION */}
             <motion.div
               className="w-full lg:w-[28%] flex flex-col justify-evenly text-white"
@@ -104,17 +104,17 @@ export default function TravelerReviews() {
                   ease: "easeOut",
                 }}>
                 <Image
-                  src="/images/testimoniall.png"
+                  src="/images/testimonial.png"
                   alt="Traveler"
                   width={256}
                   height={256}
-                  className="w-52 object-contain hidden md:block"
+                  className="w-[16vw] object-contain mt-[4vw] hidden md:block"
                 />
               </motion.div>
 
               {/* Navigation Buttons */}
               <motion.div
-                className="hidden md:flex gap-8 justify-center mt-8"
+                className="hidden md:flex gap-8 justify-center mt-[3vw]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={
                   isInView
@@ -153,6 +153,7 @@ export default function TravelerReviews() {
                 modules={[Navigation]}
                 spaceBetween={15}
                 slidesPerView={1.1}
+                dir="ltr"
                 navigation={{
                   prevEl: ".review-button-prev",
                   nextEl: ".review-button-next",

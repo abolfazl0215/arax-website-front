@@ -64,6 +64,8 @@ body {
   color: #000;
   /* color: var(--foreground); */
   font-family: "Clash Display", sans-serif;
+  width: 100vw;
+  overflow-x: hidden;
 }
 
 .grid-bg {

@@ -4,14 +4,19 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { useLanguageStore } from "@/stores/useLanguageStore";
+import Image from "next/image";
 
 const languages = [
-  { code: "en", name: "English", flag: "🇬🇧" },
-  { code: "fa", name: "فارسی", flag: "🇮🇷" },
-  { code: "ar", name: "العربية", flag: "🇸🇦" },
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "ka", name: "ქართული", flag: "🇬🇪" },
-  { code: "hy", name: "Հայերեն", flag: "🇦🇲" },
+  { code: "en", name: "English", flag: "/icons/usa.svg" },
+  { code: "fa", name: "فارسی", flag: "/icons/iran.svg" },
+  { code: "ar", name: "العربية", flag: "/icons/arab.svg" },
+  { code: "ru", name: "Русский", flag: "/icons/russia.svg" },
+  { code: "ka", name: "ქართული", flag: "/icons/georgia.svg" },
+  { code: "hy", name: "Հայերեն", flag: "/icons/armenia.svg" },
+  { code: "fr", name: "Français", flag: "/icons/france.svg" }, // French
+  { code: "de", name: "Deutsch", flag: "/icons/germany.svg" }, // German
+  { code: "zh", name: "中文", flag: "/icons/china.svg" }, // Chinese (Simplified)
+  { code: "it", name: "Italiano", flag: "/icons/italy.svg" },
 ];
 
 const LanguageSwitcherDesktop = () => {
@@ -39,7 +44,7 @@ const LanguageSwitcherDesktop = () => {
     return (
       <div className="px-4 py-2 rounded-lg bg-slate-200 flex items-center gap-2 text-sm">
         <span className="mr-1">🇬🇧</span>
-        <span className="w-8">en</span>
+        <span className="w-8">EN</span>
         <ChevronDown size={15} />
       </div>
     );
@@ -50,8 +55,14 @@ const LanguageSwitcherDesktop = () => {
       <button
         onClick={() => setIsLangOpen(!isLangOpen)}
         className="px-4 py-2 rounded-lg bg-slate-200 flex items-center gap-2 text-sm hover:bg-slate-300 transition-colors cursor-pointer">
-        <span className="mr-1">{language.flag}</span>
-        <span className="w-8">{language.code}</span>
+        <Image
+          src={language.flag}
+          className="h-5 w-5"
+          alt="flag"
+          width={50}
+          height={50}
+        />
+        <span className="w-8">{language.code.toUpperCase()}</span>
         <ChevronDown size={15} />
       </button>
 
@@ -62,7 +73,13 @@ const LanguageSwitcherDesktop = () => {
               key={lang.code}
               onClick={() => changeLanguage(lang)}
               className="w-full cursor-pointer px-4 py-2 text-left hover:bg-slate-100 transition-colors text-sm flex items-center gap-2">
-              <span>{lang.flag}</span>
+              <Image
+                src={lang.flag}
+                className="h-5 w-5"
+                alt="flag"
+                width={50}
+                height={50}
+              />
               <span>{lang.name}</span>
             </button>
           ))}

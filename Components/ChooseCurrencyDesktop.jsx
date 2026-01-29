@@ -1,61 +1,85 @@
 "use client";
 import { ChevronDown } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLanguageStore } from "@/stores/useLanguageStore";
 
 const currencies = [
-  { code: "AMD", name: "Armenian Dram" },
-  { code: "RUB", name: "Russian Ruble" },
-  { code: "GEL", name: "Georgian Lari" },
-  { code: "USD", name: "US Dollar" },
+  { code: "AMD", name: "Armenian Dram", symbol: "֏" },
+  { code: "RUB", name: "Russian Ruble", symbol: "₽" },
+  { code: "GEL", name: "Georgian Lari", symbol: "₾" },
+  { code: "USD", name: "US Dollar", symbol: "$" },
+  { code: "EUR", name: "Euro", symbol: "€" },
 ];
 
-const ChooseCurrencyDesktop = ({ setIsCurrencyOpen, setIsLangOpen, isCurrencyOpen }) => {
+const ChooseCurrencyDesktop = () => {
   const { currency, setCurrency } = useLanguageStore();
-  const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
 
-  // جلوگیری از hydration mismatch
+  // بستن dropdown با کلیک خارج
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    const handleClickOutside = (event) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
 
-  const handleCurrencyChange = (curr) => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleSelect = (curr) => {
+    console.log("✅ Selected:", curr.code);
     setCurrency(curr);
-    setIsCurrencyOpen(false);
+    setIsOpen(false);
   };
 
-  // نمایش placeholder تا زمان mount شدن
-  if (!mounted) {
-    return (
-      <div className="px-4 py-2 text-sm rounded-lg border border-slate-300 flex items-center gap-2">
-        <span className="w-8">AMD</span>
-        <ChevronDown size={15} />
-      </div>
-    );
-  }
-
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
+      {/* Button */}
       <button
-        onClick={() => {
-          setIsCurrencyOpen(!isCurrencyOpen);
-          setIsLangOpen(false);
-        }}
-        className="px-4 py-2 cursor-pointer text-sm rounded-lg border border-slate-300 hover:border-slate-500 transition-all flex items-center gap-2 hover:bg-slate-100"
-      >
-        <span className="w-8">{currency.code}</span>
-        <ChevronDown size={15} />
+        onClick={() => setIsOpen(!isOpen)}
+        type="button"
+        className="px-4 py-2 cursor-pointer text-sm rounded-lg border border-slate-300 hover:border-slate-500 transition-all flex items-center gap-2 hover:bg-slate-100">
+        <span className="w-8">{currency?.code || "AMD"}</span>
+        <ChevronDown
+          size={15}
+          className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
       </button>
 
-      {isCurrencyOpen && (
-        <div className="absolute top-full mt-2 right-0 bg-white rounded-lg border border-gray-200 overflow-hidden z-50 min-w-[150px] shadow-lg">
+      {/* Dropdown */}
+      {isOpen && (
+        <div className="absolute top-full right-0 mt-2 bg-white rounded-lg border border-gray-200 overflow-hidden min-w-[200px] shadow-2xl z-50">
           {currencies.map((curr) => (
             <button
               key={curr.code}
-              onClick={() => handleCurrencyChange(curr)}
-              className="w-full px-4 py-2 text-left hover:bg-slate-100 transition-colors text-sm"
-            >
-              {curr.code} - {curr.name}
+              type="button"
+              onClick={() => handleSelect(curr)}
+              className={`
+                w-full px-4 py-2 text-left cursor-pointer transition-colors text-sm block
+                ${
+                  currency?.code === curr.code
+                    ? "bg-blue-50 text-blue-700 font-semibold"
+                    : "hover:bg-slate-200"
+                }
+              `}>
+              <div className="flex items-center justify-between">
+                <span>
+                  {curr.code} - {curr.name}
+                </span>
+                {currency?.code === curr.code && (
+                  <span className="text-blue-600 font-bold">✓</span>
+                )}
+              </div>
             </button>
           ))}
         </div>

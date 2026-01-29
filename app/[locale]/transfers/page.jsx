@@ -16,6 +16,7 @@ import {
 import Navbar from "../../../Components/Navbar";
 import Footer from "../../../Components/Footer";
 import useDataStore from "../../../stores/useDataStore"; // مسیر store را به درستی تنظیم کنید
+import { useLanguageStore } from "../../../stores/useLanguageStore";
 
 const locations = [
   "Tatev Ropeway",
@@ -50,8 +51,9 @@ const TransferPage = () => {
     transfersLoading,
     transfersError,
     fetchTransfers,
-    toggleBookingModal
+    toggleBookingModal,
   } = useDataStore();
+  const { currency } = useLanguageStore();
 
   // بارگذاری ترانسفرها هنگام mount شدن کامپوننت
   useEffect(() => {
@@ -113,7 +115,6 @@ const TransferPage = () => {
       setShowResultsModal(true);
     }, 1500); // 1.5 ثانیه delay
   };
-
 
   return (
     <div className="min-h-screen bg-[#f1f5f9]">
@@ -296,7 +297,19 @@ const TransferPage = () => {
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
-                          ${vehicle.pricePerKm || 0}/km
+                          {(() => {
+                            const matchedPrice =
+                              vehicle.pricePerKm.find(
+                                (p) => p.currency === currency.code,
+                              );
+
+                            return matchedPrice ? (
+                              <span>
+                                {matchedPrice.price}
+                                {currency.symbol} {" /km "}
+                              </span>
+                            ) : null;
+                          })()}
                         </div>
                       </div>
 
@@ -436,7 +449,18 @@ const TransferPage = () => {
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg">
-                    ${vehicle.pricePerKm || 0}/km
+                    {(() => {
+                      const matchedPrice = vehicle.pricePerKm.find(
+                        (p) => p.currency === currency.code,
+                      );
+
+                      return matchedPrice ? (
+                        <span>
+                          {matchedPrice.price}
+                          {currency.symbol} {" /km "}
+                        </span>
+                      ) : null;
+                    })()}
                   </div>
                 </div>
 

@@ -20,6 +20,7 @@ import {
 import Navbar from "../../../../Components/Navbar";
 import Footer from "../../../../Components/Footer";
 import useDataStore from "../../../../stores/useDataStore"; // مسیر store را به درستی تنظیم کنید
+import { useLanguageStore } from "@/stores/useLanguageStore";
 
 export default function StayDetailPage() {
   const params = useParams();
@@ -34,6 +35,7 @@ export default function StayDetailPage() {
     clearSelectedStay,
     toggleBookingModal,
   } = useDataStore();
+  const { language, currency } = useLanguageStore();
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export default function StayDetailPage() {
     return (
       <>
         <Navbar />
-        <div className="min-h-screen bg-[#f1f5f9] flex items-center justify-center">
+        <div className="min-h-screen  flex items-center justify-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
         </div>
         <Footer />
@@ -179,7 +181,7 @@ export default function StayDetailPage() {
               )}
 
               {stay.starsCount > 0 && (
-                <div className="absolute top-4 left-4 bg-yellow-400/95 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-lg z-10">
+                <div className="absolute top-4 left-4 bg-yellow-100 border border-yellow-400 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-lg z-10">
                   <Star className="w-5 h-5 fill-yellow-600 text-yellow-600" />
                   <span className="font-bold text-gray-800">
                     {stay.starsCount}
@@ -190,7 +192,7 @@ export default function StayDetailPage() {
 
             {/* Thumbnails Swiper */}
             {images.length > 1 && (
-              <div className="p-4 bg-gray-50">
+              <div className="p-4 ">
                 <Swiper
                   onSwiper={setThumbsSwiper}
                   modules={[Navigation, Thumbs]}
@@ -391,32 +393,36 @@ export default function StayDetailPage() {
 
                 {stay.price && stay.price.length > 0 ? (
                   <div className="space-y-4 mb-6">
-                    {stay.price.map((priceRange, index) => (
-                      <div
-                        key={index}
-                        className="p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
-                        <div className="flex items-baseline gap-2 mb-2">
-                          <span className="text-3xl font-bold text-blue-600">
-                            {priceRange.from}
-                          </span>
-                          <span className="text-xl text-gray-600">
-                            -
-                          </span>
-                          <span className="text-3xl font-bold text-blue-600">
-                            {priceRange.to}
-                          </span>
-                          <span className="text-lg text-gray-600 ml-1">
-                            {priceRange.currency || "USD"}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          per night
-                        </p>
+                    <div
+                      className="p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
+                      <div className="flex items-baseline gap-2 mb-2">
+                        {stay.price?.length > 0 &&
+                          (() => {
+                            const matchedPrice = stay.price.find(
+                              (p) => p.currency === currency.code,
+                            );
+
+                            return matchedPrice ? (
+                              <>
+                                <span className="text-lg font-bold text-blue-600">
+                                  {matchedPrice.from}
+                                  {" - "}
+                                  {matchedPrice.to}
+                                </span>
+                                <span className="text-sm text-gray-600">
+                                  {currency.symbol}
+                                </span>
+                              </>
+                            ) : null;
+                          })()}
                       </div>
-                    ))}
+                      <p className="text-sm text-gray-600">
+                        per night
+                      </p>
+                    </div>
                   </div>
                 ) : (
-                  <div className="mb-6 p-4 bg-gray-50 rounded-lg text-center">
+                  <div className="mb-6 p-4  rounded-lg text-center">
                     <p className="text-gray-600">
                       Contact for pricing
                     </p>
@@ -429,9 +435,9 @@ export default function StayDetailPage() {
                   Book Now
                 </button>
 
-                <button className="w-full border-2 border-blue-500 text-blue-500 py-4 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300">
+                {/* <button className="w-full border-2 border-blue-500 text-blue-500 py-4 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300">
                   Contact Host
-                </button>
+                </button> */}
 
                 <div className="mt-6 pt-6 border-t border-gray-200">
                   <p className="text-sm text-gray-600 text-center">

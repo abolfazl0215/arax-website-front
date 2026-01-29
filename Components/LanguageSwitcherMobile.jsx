@@ -1,14 +1,19 @@
 "use client";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { useLanguageStore } from "@/stores/useLanguageStore";
+import Image from "next/image";
 
 const languages = [
-  { code: "en", name: "English", flag: "🇬🇧" },
-  { code: "fa", name: "فارسی", flag: "🇮🇷" },
-  { code: "ar", name: "العربية", flag: "🇸🇦" },
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "ka", name: "ქართული", flag: "🇬🇪" },
-  { code: "hy", name: "Հայերեն", flag: "🇦🇲" },
+  { code: "en", name: "English", flag: "/icons/usa.svg" },
+  { code: "fa", name: "فارسی", flag: "/icons/iran.svg" },
+  { code: "ar", name: "العربية", flag: "/icons/arab.svg" },
+  { code: "ru", name: "Русский", flag: "/icons/russia.svg" },
+  { code: "ka", name: "ქართული", flag: "/icons/georgia.svg" },
+  { code: "hy", name: "Հայերեն", flag: "/icons/armenia.svg" },
+  { code: "fr", name: "Français", flag: "/icons/france.svg" },
+  { code: "de", name: "Deutsch", flag: "/icons/germany.svg" },
+  { code: "zh", name: "中文", flag: "/icons/china.svg" },
+  { code: "it", name: "Italiano", flag: "/icons/italy.svg" },
 ];
 
 const LanguageSwitcherMobile = ({ setIsLangOpen }) => {
@@ -29,7 +34,12 @@ const LanguageSwitcherMobile = ({ setIsLangOpen }) => {
           key={lang.code}
           onClick={() => changeLanguage(lang)}
           className="w-full px-4 py-3 text-left hover:bg-slate-100 transition-colors text-sm flex items-center gap-2">
-          <span>{lang.flag}</span>
+          <Image
+            src={lang.flag}
+            alt={lang.name}
+            width={22}
+            height={14}
+          />
           <span>{lang.name}</span>
         </button>
       ))}
