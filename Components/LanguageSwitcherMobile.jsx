@@ -5,10 +5,10 @@ import Image from "next/image";
 
 const languages = [
   { code: "en", name: "English", flag: "/icons/usa.svg" },
-  { code: "fa", name: "فارسی", flag: "/icons/iran.svg" },
-  { code: "ar", name: "العربية", flag: "/icons/arab.svg" },
   { code: "ru", name: "Русский", flag: "/icons/russia.svg" },
+  { code: "fa", name: "فارسی", flag: "/icons/iran.svg" },
   { code: "ka", name: "ქართული", flag: "/icons/georgia.svg" },
+  { code: "ar", name: "العربية", flag: "/icons/arab.svg" },
   { code: "hy", name: "Հայերեն", flag: "/icons/armenia.svg" },
   { code: "fr", name: "Français", flag: "/icons/france.svg" },
   { code: "de", name: "Deutsch", flag: "/icons/germany.svg" },

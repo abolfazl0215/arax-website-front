@@ -4,19 +4,42 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import LanguageSwitcherDesktop from "./LanguageSwitcherDesktop";
 import LanguageSwitcherMobile from "./LanguageSwitcherMobile";
 import ChooseCurrencyDesktop from "./ChooseCurrencyDesktop";
 import ChooseCurrencyMobile from "./ChooseCurrencyMobile";
+import LanguageSelectionModal from "./LanguageSelectionModal";
 import { useLanguageStore } from "@/stores/useLanguageStore";
 
 const Navbar = () => {
   const nav = useTranslations("Navigation");
-  const { language, setLanguage } = useLanguageStore();
-
+  const { language, setLanguage, _hasHydrated } = useLanguageStore();
+  const router = useRouter();
   const pathname = usePathname();
+
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+
+  // ✅ فقط بعد از hydration، بررسی کن که آیا زبان خالی است
+  useEffect(() => {
+    if (_hasHydrated) {
+      console.log("✅ Hydration completed. Language:", language);
+      if (!language.code) {
+        console.log("⚠️ Language is empty, showing modal");
+        setShowLanguageModal(true);
+      }
+    }
+  }, [_hasHydrated, language.code]);
+
+  const handleLanguageSelection = (selectedLang) => {
+    setLanguage(selectedLang);
+    setShowLanguageModal(false);
+
+    // ریدایرکت به مسیر با زبان انتخاب شده
+    const currentPath = pathname.split("/").slice(2).join("/") || "";
+    router.push(`/${selectedLang.code}/${currentPath}`);
+  };
 
   const isActive = (path) =>
     pathname === path
@@ -26,7 +49,6 @@ const Navbar = () => {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -38,23 +60,31 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 🔑 تغییر کلیدی: backdrop نباید dropdown را ببندد
   const handleBackdropClick = (e) => {
-    // فقط اگر کلیک مستقیماً روی backdrop باشد (نه روی sidebar)
     if (e.target === e.currentTarget) {
-      // اگر dropdown باز است، فقط dropdown را ببند
       if (isLangOpen || isCurrencyOpen) {
         setIsLangOpen(false);
         setIsCurrencyOpen(false);
       } else {
-        // اگر dropdown باز نیست، menu را ببند
         setIsMobileMenuOpen(false);
       }
     }
   };
 
+  // ✅ در حین hydration، نمایش لودینگ یا چیزی نمایش نده
+  if (!_hasHydrated) {
+    return null; // یا می‌تونید یک skeleton/loader نمایش بدید
+  }
+
   return (
     <>
+      {/* مودال انتخاب زبان */}
+      {showLanguageModal && (
+        <LanguageSelectionModal
+          onSelectLanguage={handleLanguageSelection}
+        />
+      )}
+
       <nav
         className={`
         fixed top-0 left-0 w-full z-40
@@ -66,7 +96,7 @@ const Navbar = () => {
       `}>
         <button
           onClick={() => setIsMobileMenuOpen(true)}
-          className="md:hidden  hover:bg-gray-100 rounded-lg transition-colors">
+          className="md:hidden hover:bg-gray-100 rounded-lg transition-colors">
           <Menu size={24} className="text-gray-700" />
         </button>
 
@@ -88,7 +118,7 @@ const Navbar = () => {
                 }}>
                 Araks
                 <span
-                  className="hidden md:block  md:ml-0 ml-[1.5vw]  text-xs md:text-sm font-normal bg-clip-text text-transparent bg-[linear-gradient(135deg,#B48900_0%,#FFC100_35%,#FFD966_50%,#FFC100_65%,#B48900_100%)]"
+                  className="hidden md:block md:ml-0 ml-[1.5vw] text-xs md:text-sm font-normal bg-clip-text text-transparent bg-[linear-gradient(135deg,#B48900_0%,#FFC100_35%,#FFD966_50%,#FFC100_65%,#B48900_100%)]"
                   style={{
                     WebkitTextStroke: "0.5px #FFC100",
                   }}>
@@ -129,7 +159,6 @@ const Navbar = () => {
 
         <div className="hidden md:flex gap-2">
           <LanguageSwitcherDesktop />
-
           <ChooseCurrencyDesktop
             setIsCurrencyOpen={setIsCurrencyOpen}
             setIsLangOpen={setIsLangOpen}
@@ -138,7 +167,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* 🔑 Mobile Menu Backdrop - z-index پایین‌تر از dropdown */}
+      {/* Mobile Menu Backdrop */}
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
@@ -151,10 +180,7 @@ const Navbar = () => {
         className={`fixed top-0 left-0 h-full w-[80%] bg-white z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
-        onClick={(e) => {
-          // 🔑 جلوگیری از بسته شدن وقتی روی sidebar کلیک می‌شود
-          e.stopPropagation();
-        }}>
+        onClick={(e) => e.stopPropagation()}>
         <div className="flex flex-col h-full">
           <div className="flex justify-between items-center p-4 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-gray-800">

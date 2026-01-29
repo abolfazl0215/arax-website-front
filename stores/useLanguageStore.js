@@ -6,14 +6,18 @@ export const useLanguageStore = create(
   persist(
     (set) => ({
       language: {
-        code: "en",
-        name: "English",
+        code: "",
+        name: "",
         flag: "/icons/usa.svg",
       },
       currency: {
         code: "AMD",
         name: "Armenian Dram",
-        symbol: "֏", // ⚠️ اضافه کردن symbol
+        symbol: "֏",
+      },
+      _hasHydrated: false, // ✅ اضافه کردن flag برای بررسی hydration
+      setHasHydrated: (state) => {
+        set({ _hasHydrated: state });
       },
       setLanguage: (lang) => {
         console.log("📝 Setting language:", lang);
@@ -27,9 +31,10 @@ export const useLanguageStore = create(
     }),
     {
       name: "app-settings-storage",
-      // ⚠️ اضافه کردن این option برای debug
       onRehydrateStorage: () => (state) => {
         console.log("💾 Rehydrated from localStorage:", state);
+        // ✅ بعد از hydration، flag را true کن
+        state?.setHasHydrated(true);
       },
     },
   ),

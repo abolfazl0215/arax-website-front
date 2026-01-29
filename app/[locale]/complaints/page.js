@@ -1,8 +1,3 @@
-/**
- * Complaints Page
- * Customer complaints and feedback form
- */
-
 "use client";
 
 import { useState } from "react";
@@ -33,17 +28,20 @@ export default function ComplaintsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
-      <main className="flex-grow py-12  md:mx-[10vw] mt-[15vw] md:mt-[10vw]">
-        <div className="container">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+
+      {/* ✅ فاصله استاندارد از ناوبار */}
+      <main className="flex-grow pt-28 pb-16 px-4 sm:px-6 lg:px-8">
+        {/* ✅ محدود کردن عرض برای خوانایی */}
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6 text-center md:text-left">
             Submit a Complaint
           </h1>
 
-          <div className="bg-white rounded-lg shadow-md p-8">
+          <div className="bg-white rounded-2xl shadow-lg p-5 sm:p-8">
             {submitted ? (
-              <div className="text-center py-8">
+              <div className="text-center py-10">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg
                     className="w-8 h-8 text-green-600"
@@ -58,18 +56,21 @@ export default function ComplaintsPage() {
                     />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
                   Complaint Submitted
                 </h2>
-                <p className="text-gray-600">
-                  We have received your complaint and will get back to
-                  you within 48 hours.
+
+                <p className="text-gray-600 text-sm sm:text-base">
+                  We have received your complaint and will contact you
+                  within 48 hours.
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Name */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Full Name
                   </label>
                   <input
@@ -82,12 +83,13 @@ export default function ComplaintsPage() {
                       })
                     }
                     required
-                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-teal-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
                   />
                 </div>
 
+                {/* Email */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Email Address
                   </label>
                   <input
@@ -100,12 +102,13 @@ export default function ComplaintsPage() {
                       })
                     }
                     required
-                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-teal-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
                   />
                 </div>
 
+                {/* Booking Ref */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Booking Reference (Optional)
                   </label>
                   <input
@@ -117,16 +120,17 @@ export default function ComplaintsPage() {
                         bookingReference: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-teal-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
                   />
                 </div>
 
+                {/* Complaint */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Complaint Details
                   </label>
                   <textarea
-                    rows="8"
+                    rows="6"
                     value={formData.complaint}
                     onChange={(e) =>
                       setFormData({
@@ -135,13 +139,14 @@ export default function ComplaintsPage() {
                       })
                     }
                     required
-                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-teal-500"
-                    placeholder="Please describe your complaint in detail..."></textarea>
+                    placeholder="Please describe your complaint in detail..."
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition resize-none"
+                  />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors font-medium">
+                  className="w-full py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 active:scale-[0.98] transition">
                   Submit Complaint
                 </button>
               </form>
@@ -149,6 +154,7 @@ export default function ComplaintsPage() {
           </div>
         </div>
       </main>
+
       <Footer />
     </div>
   );
