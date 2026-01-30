@@ -104,7 +104,7 @@ const Navbar = () => {
           <div className="flex items-center gap-2 md:gap-4">
             <Image
               src="/arax-logo.svg"
-              className="md:w-13 w-8"
+              className="md:w-[3.2vw] w-8"
               alt="logo"
               width={200}
               height={200}
@@ -112,24 +112,17 @@ const Navbar = () => {
 
             <div>
               <h1
-                className="text-xl md:text-3xl font-semibold bg-clip-text text-transparent bg-[linear-gradient(135deg,#B48900_0%,#FFC100_30%,#FFD966_50%,#FFC100_70%,#B48900_100%)]"
+                className="text-xl md:text-[2vw] font-semibold bg-clip-text text-transparent bg-[linear-gradient(135deg,#B48900_0%,#FFC100_30%,#FFD966_50%,#FFC100_70%,#B48900_100%)]"
                 style={{
                   WebkitTextStroke: "0.5px #FFC100",
                 }}>
-                Araks
-                <span
-                  className="hidden md:block md:ml-0 ml-[1.5vw] text-xs md:text-sm font-normal bg-clip-text text-transparent bg-[linear-gradient(135deg,#B48900_0%,#FFC100_35%,#FFD966_50%,#FFC100_65%,#B48900_100%)]"
-                  style={{
-                    WebkitTextStroke: "0.5px #FFC100",
-                  }}>
-                  group
-                </span>
+                Araks group
               </h1>
             </div>
           </div>
         </div>
 
-        <div className="hidden md:flex gap-11 text-[#4B4B4B] transition-all">
+        <div className="hidden md:flex gap-11 text-[#4B4B4B] transition-all text-[1.15vw]">
           <Link
             href={`/${language.code || "en"}`}
             className={`${isActive(`/${language.code || "en"}`)} cursor-pointer hover:text-teal-600 transition-colors`}>
@@ -157,7 +150,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="hidden md:flex gap-2">
+        <div className="hidden md:flex gap-[1vw]">
           <LanguageSwitcherDesktop />
           <ChooseCurrencyDesktop
             setIsCurrencyOpen={setIsCurrencyOpen}
@@ -240,8 +233,9 @@ const Navbar = () => {
                   }}
                   className="w-full px-4 py-3 rounded-lg bg-slate-200 flex items-center justify-between text-sm hover:bg-slate-300 transition-colors">
                   <div className="flex items-center gap-2">
+                    {console.log({ language })}
                     <Image
-                      src={language.flag}
+                      src={language.flag || "/icons/usa.svg"}
                       className="h-5 w-5"
                       alt="flag"
                       width={50}
@@ -259,8 +253,8 @@ const Navbar = () => {
 
                 {isLangOpen && (
                   <LanguageSwitcherMobile
-                    setSelectedLang={setLanguage}
                     setIsLangOpen={setIsLangOpen}
+                    isLangOpen={isLangOpen} // ✅ این را اضافه کنید
                   />
                 )}
               </div>

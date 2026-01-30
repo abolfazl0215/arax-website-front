@@ -5,6 +5,7 @@ import Footer from "../../../Components/Footer";
 import useDataStore from "../../../stores/useDataStore"; // مسیر store را به درستی تنظیم کنید
 import Link from "next/link";
 import { useLanguageStore } from "@/stores/useLanguageStore";
+import { useTranslations } from "next-intl";
 
 const filters = [
   { id: "All", label: "All" },
@@ -21,6 +22,8 @@ const StaysPage = () => {
   const { stays, staysLoading, staysError, fetchStays } =
     useDataStore();
   const { language, currency } = useLanguageStore();
+
+  const stayy = useTranslations("Stays");
 
   // بارگذاری اقامتگاه‌ها هنگام mount شدن کامپوننت
   useEffect(() => {
@@ -40,13 +43,10 @@ const StaysPage = () => {
       {/* Header Section */}
       <div className="px-4 md:px-[10vw] pt-8 md:pt-16 mt-[20vw] md:mt-[10vw]">
         <h1 className="text-2xl md:text-[2.3vw] font-semibold mb-3">
-          Stays in Armenia & the Region | Hotels, Apartments
+          {stayy("title")}
         </h1>
         <p className="text-slate-600 text-sm md:text-base mb-8">
-          Discover the best places to stay during your journey. From
-          luxury hotels and cozy boutique stays to comfortable
-          apartments and unique accommodations, we help you find the
-          perfect stay for a relaxing and memorable travel experience.
+          {stayy("subTitle")}
         </p>
       </div>
 
@@ -217,7 +217,7 @@ const StaysPage = () => {
                     {stay.price && stay.price.length > 0 && (
                       <div className="mb-4 p-3 bg-blue-50 rounded-lg">
                         <div className="text-sm font-semibold text-gray-700 mb-1">
-                          Price Range:
+                          {stayy("priceRange")}:
                         </div>
                         <div className="flex items-baseline gap-2">
                           {stay.price?.length > 0 &&
@@ -229,7 +229,9 @@ const StaysPage = () => {
                               return matchedPrice ? (
                                 <>
                                   <span className="text-lg font-bold text-blue-600">
-                                    {matchedPrice.from}{" - "}{matchedPrice.to}
+                                    {matchedPrice.from}
+                                    {" - "}
+                                    {matchedPrice.to}
                                   </span>
                                   <span className="text-sm text-gray-600">
                                     {currency.symbol}
@@ -245,7 +247,7 @@ const StaysPage = () => {
                     {stay.included && stay.included.length > 0 && (
                       <div className="mb-4">
                         <div className="text-xs font-semibold text-gray-700 mb-2">
-                          Included:
+                          {stayy("included")}:
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           {stay.included
@@ -269,7 +271,7 @@ const StaysPage = () => {
                     <Link
                       href={`/${language.code || "en"}/stay/${stay._id}`}
                       className="inline-flex items-center text-blue-500 font-medium hover:text-cyan-600 transition-colors">
-                      See more
+                      {stayy("seeMore")}
                       <svg
                         className="w-4 h-4 ml-2"
                         fill="none"

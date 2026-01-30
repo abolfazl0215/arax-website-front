@@ -17,6 +17,7 @@ import Navbar from "../../../Components/Navbar";
 import Footer from "../../../Components/Footer";
 import useDataStore from "../../../stores/useDataStore"; // مسیر store را به درستی تنظیم کنید
 import { useLanguageStore } from "../../../stores/useLanguageStore";
+import { useTranslations } from "next-intl";
 
 const locations = [
   "Tatev Ropeway",
@@ -44,6 +45,8 @@ const TransferPage = () => {
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [formErrors, setFormErrors] = useState({});
+
+  const transferss = useTranslations("Transfers");
 
   // دریافت داده‌ها و توابع از store
   const {
@@ -123,15 +126,10 @@ const TransferPage = () => {
 
       <div className="px-4 md:px-[10vw] pt-8 md:pt-16 pb-8 mt-[10vw]">
         <h1 className="text-3xl md:text-[2.8vw] mt-[10vw] md:mt-0 font-bold mb-4 text-gray-900">
-          Comfortable & Reliable Transfer Service
+          {transferss("title1")}
         </h1>
         <p className="text-slate-600 text-sm md:text-base max-w-3xl leading-relaxed">
-          Travel in comfort and style with our professional transfer
-          service. Whether you need airport transfers, city-to-city
-          transportation, or tours to popular destinations, we provide
-          safe, reliable, and affordable transfers throughout Armenia
-          and neighboring regions. Our experienced drivers ensure a
-          smooth journey in well-maintained vehicles.
+          {transferss("subTitle1")}
         </p>
       </div>
 
@@ -140,7 +138,7 @@ const TransferPage = () => {
         <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
             <Car className="w-7 h-7 text-blue-500" />
-            Book Your Transfer
+            {transferss("bookYourTransfer")}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -148,7 +146,8 @@ const TransferPage = () => {
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-blue-500" />
-                From <span className="text-red-500">*</span>
+                {transferss("from")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <select
                 name="from"
@@ -177,7 +176,8 @@ const TransferPage = () => {
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-green-500" />
-                To <span className="text-red-500">*</span>
+                {transferss("to")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <select
                 name="to"
@@ -204,7 +204,8 @@ const TransferPage = () => {
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-purple-500" />
-                When <span className="text-red-500">*</span>
+                {transferss("when")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="datetime-local"
@@ -425,12 +426,10 @@ const TransferPage = () => {
         <div className="px-4 md:px-[10vw] py-12 md:py-16">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 flex items-center gap-3">
             <Car className="w-8 h-8 text-blue-500" />
-            Our Vehicles
+            {transferss("title2")}
           </h2>
           <p className="text-gray-600 mb-10 max-w-2xl">
-            Choose from our fleet of modern, comfortable, and
-            well-maintained vehicles. All vehicles are regularly
-            serviced and equipped with safety features.
+            {transferss("subTitle2")}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -475,17 +474,18 @@ const TransferPage = () => {
                     <div className="flex items-center gap-3 text-gray-700">
                       <Users className="w-5 h-5 text-blue-500" />
                       <span className="font-medium text-sm">
-                        Passengers:
+                        {transferss("passengers")}:
                       </span>
                       <span className="text-sm">
-                        {vehicle.passengers || "N/A"} Passengers
+                        {vehicle.passengers || "N/A"}{" "}
+                        {transferss("passengers")}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-3 text-gray-700">
                       <Clock className="w-5 h-5 text-blue-500" />
                       <span className="font-medium text-sm">
-                        Release Year:
+                        {transferss("releaseYear")}:
                       </span>
                       <span className="text-sm">
                         {vehicle.releaseYear || "N/A"}
@@ -495,7 +495,7 @@ const TransferPage = () => {
                     <div className="flex items-center gap-3 text-gray-700">
                       <Shield className="w-5 h-5 text-green-500" />
                       <span className="font-medium text-sm">
-                        Insurance:
+                        {transferss("Insurance")}:
                       </span>
                       <span className="text-sm">
                         {vehicle.insurance
@@ -510,7 +510,7 @@ const TransferPage = () => {
                     vehicle.features.length > 0 && (
                       <div className="mb-5">
                         <p className="text-sm font-semibold text-gray-700 mb-2">
-                          Features:
+                          {transferss("Features")}:
                         </p>
                         <div className="flex flex-wrap gap-2">
                           {vehicle.features.map((feature, index) => (
@@ -528,7 +528,7 @@ const TransferPage = () => {
                   <button
                     onClick={toggleBookingModal}
                     className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
-                    Select Vehicle
+                    {transferss("selectVehicle")}
                   </button>
                 </div>
               </div>
@@ -549,7 +549,7 @@ const TransferPage = () => {
       {/* Why Choose Us Section */}
       <div className="px-4 md:px-[10vw] py-12 bg-gradient-to-r from-blue-50 to-cyan-50">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
-          Why Choose Our Transfer Service?
+          {transferss("why")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
           <div className="text-center">
@@ -557,10 +557,10 @@ const TransferPage = () => {
               <Shield className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-bold text-gray-900 mb-2">
-              Safe & Reliable
+              {transferss("whyTitle1")}
             </h3>
             <p className="text-sm text-gray-600">
-              Professional drivers with years of experience
+              {transferss("whyDesc1")}
             </p>
           </div>
           <div className="text-center">
@@ -568,10 +568,10 @@ const TransferPage = () => {
               <Clock className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-bold text-gray-900 mb-2">
-              24/7 Service
+              {transferss("whyTitle2")}
             </h3>
             <p className="text-sm text-gray-600">
-              Available anytime, day or night
+              {transferss("whyDesc2")}
             </p>
           </div>
           <div className="text-center">
@@ -579,10 +579,10 @@ const TransferPage = () => {
               <Car className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-bold text-gray-900 mb-2">
-              Modern Fleet
+              {transferss("whyTitle3")}
             </h3>
             <p className="text-sm text-gray-600">
-              Well-maintained and comfortable vehicles
+              {transferss("whyDesc3")}
             </p>
           </div>
           <div className="text-center">
@@ -590,10 +590,10 @@ const TransferPage = () => {
               <Users className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-bold text-gray-900 mb-2">
-              Flexible Options
+              {transferss("whyTitle4")}
             </h3>
             <p className="text-sm text-gray-600">
-              Solo, family, or group transfers
+              {transferss("whyDesc4")}
             </p>
           </div>
         </div>

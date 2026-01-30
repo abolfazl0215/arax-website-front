@@ -12,6 +12,9 @@ import {
 } from "lucide-react";
 import Navbar from "../../../Components/Navbar";
 import Footer from "../../../Components/Footer";
+import Link from "next/link";
+import { useLanguageStore } from "@/stores/useLanguageStore";
+import Image from "next/image";
 
 const AboutUsPage = () => {
   const stats = [
@@ -20,6 +23,8 @@ const AboutUsPage = () => {
     { icon: Star, number: "4.9/5", label: "Average Rating" },
     { icon: Globe, number: "50+", label: "Tour Destinations" },
   ];
+
+  const { language } = useLanguageStore();
 
   const values = [
     {
@@ -77,8 +82,10 @@ const AboutUsPage = () => {
       <Navbar />
       {/* Hero Section */}
       <div className="relative h-[60vh] md:h-[70vh] overflow-hidden mt-[5vw]">
-        <img
-          src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=1600&h=900&fit=crop"
+        <Image
+          width={1000}
+          height={400}
+          src="/images/company.webp"
           alt="Armenia landscape"
           className="w-full h-full object-cover"
         />
@@ -279,12 +286,16 @@ const AboutUsPage = () => {
             you
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 bg-gradient-to-r from-[#012710] to-[#015320] text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105">
+            <Link
+              href={`/${language.code || "en"}/tours`}
+              className="px-8 py-4 bg-gradient-to-r from-[#012710] to-[#015320] text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105">
               Book Your Tour
-            </button>
-            <button className="px-8 py-4 bg-white text-[#012710] font-semibold rounded-xl border-2 border-[#012710] hover:bg-green-50 transition-all duration-300">
+            </Link>
+            <Link
+              href={`/${language.code || "en"}/contact`}
+              className="px-8 py-4 bg-white text-[#012710] font-semibold rounded-xl border-2 border-[#012710] hover:bg-green-50 transition-all duration-300 cursor-pointer">
               Contact Us
-            </button>
+            </Link>
           </div>
         </div>
       </div>

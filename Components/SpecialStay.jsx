@@ -47,7 +47,7 @@ export default function HotelsSwiper() {
           transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}>
           <div className="flex items-center gap-4">
             <h2 className="text-[6.3vw] md:text-3xl font-bold text-gray-900">
-              Stays
+              {home("stays")}
             </h2>
             <Link
               href={`/${language.code}/stays`}

@@ -1,11 +1,6 @@
-/**
- * FAQ Page
- * Frequently asked questions
- */
-
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Navbar from "../../../Components/Navbar";
 import Footer from "../../../Components/Footer";
 
@@ -44,6 +39,7 @@ const faqs = [
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState(null);
+  const contentRefs = useRef([]);
 
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -52,47 +48,52 @@ export default function FAQPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow py-12 mt-[13vw] px-4 ">
+      <main className="flex-grow py-12 mt-[13vw] px-4 md:px-[5vw]">
         <div className="container mx-auto max-w-4xl">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
             Frequently Asked Questions
           </h1>
 
           <div className="space-y-4">
-            {faqs &&
-              faqs.length > 0 &&
-              faqs.map((faq, index) => (
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg shadow-md overflow-hidden">
+                <button
+                  onClick={() => toggleFAQ(index)}
+                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors">
+                  <span className="font-semibold text-gray-900">
+                    {faq.question}
+                  </span>
+                  <svg
+                    className={`w-5 h-5 text-gray-600 transition-transform duration-300 ${
+                      openIndex === index ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
                 <div
-                  key={index}
-                  className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <button
-                    onClick={() => toggleFAQ(index)}
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors">
-                    <span className="font-semibold text-gray-900">
-                      {faq.question}
-                    </span>
-                    <svg
-                      className={`w-5 h-5 text-gray-600 transition-transform ${
-                        openIndex === index ? "rotate-180" : ""
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
-                  {openIndex === index && (
-                    <div className="px-6 py-4 border-t border-gray-200">
-                      <p className="text-gray-700">{faq.answer}</p>
-                    </div>
-                  )}
+                  ref={(el) => (contentRefs.current[index] = el)}
+                  className={`px-6 overflow-hidden transition-all duration-500 ease-in-out`}
+                  style={{
+                    maxHeight:
+                      openIndex === index
+                        ? `${contentRefs.current[index]?.scrollHeight}px`
+                        : "0px",
+                  }}>
+                  <p className="text-gray-700 py-4">{faq.answer}</p>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         </div>
       </main>

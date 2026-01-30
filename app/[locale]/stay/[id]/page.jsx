@@ -21,11 +21,14 @@ import Navbar from "../../../../Components/Navbar";
 import Footer from "../../../../Components/Footer";
 import useDataStore from "../../../../stores/useDataStore"; // مسیر store را به درستی تنظیم کنید
 import { useLanguageStore } from "@/stores/useLanguageStore";
+import { useTranslations } from "next-intl";
 
 export default function StayDetailPage() {
   const params = useParams();
   const router = useRouter();
   const stayId = params.id;
+
+  const singleStay = useTranslations("SingleStay");
 
   const {
     selectedStay,
@@ -297,7 +300,7 @@ export default function StayDetailPage() {
               {stay.description && (
                 <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
                   <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                    About
+                    {singleStay("about")}
                   </h2>
                   <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                     {stay.description}
@@ -308,7 +311,7 @@ export default function StayDetailPage() {
               {/* Property Details */}
               <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Property Details
+                  {singleStay("propertyDetails")}
                 </h2>
                 <div className="grid grid-cols-2 gap-6">
                   {stay.square && (
@@ -317,7 +320,9 @@ export default function StayDetailPage() {
                         <Maximize className="w-6 h-6 text-blue-600" />
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Size</p>
+                        <p className="text-sm text-gray-600">
+                          {singleStay("size")}
+                        </p>
                         <p className="font-semibold text-gray-900">
                           {stay.square} m²
                         </p>
@@ -332,7 +337,7 @@ export default function StayDetailPage() {
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">
-                          Rating
+                          {singleStay("rating")}
                         </p>
                         <p className="font-semibold text-gray-900">
                           {stay.starsCount} Stars
@@ -347,7 +352,7 @@ export default function StayDetailPage() {
               {stay.included && stay.included.length > 0 && (
                 <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                    What's Included
+                    {singleStay("whatsIncluded")}
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {stay.included.map((item, index) => (
@@ -368,7 +373,7 @@ export default function StayDetailPage() {
               {stay.notes && stay.notes.length > 0 && (
                 <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                    Important Information
+                    {singleStay("importantInformation")}
                   </h2>
                   <div className="space-y-3">
                     {stay.notes.map((note, index) => (
@@ -388,13 +393,12 @@ export default function StayDetailPage() {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg sticky top-24">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  Pricing
+                  {singleStay("pricing")}
                 </h3>
 
                 {stay.price && stay.price.length > 0 ? (
                   <div className="space-y-4 mb-6">
-                    <div
-                      className="p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
+                    <div className="p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
                       <div className="flex items-baseline gap-2 mb-2">
                         {stay.price?.length > 0 &&
                           (() => {
@@ -417,7 +421,7 @@ export default function StayDetailPage() {
                           })()}
                       </div>
                       <p className="text-sm text-gray-600">
-                        per night
+                        {singleStay("perNight")}
                       </p>
                     </div>
                   </div>
@@ -432,7 +436,7 @@ export default function StayDetailPage() {
                 <button
                   onClick={toggleBookingModal}
                   className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300 hover:scale-105 mb-4">
-                  Book Now
+                  {singleStay("bookNow")}
                 </button>
 
                 {/* <button className="w-full border-2 border-blue-500 text-blue-500 py-4 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300">

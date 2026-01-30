@@ -18,11 +18,13 @@ import useDataStore from "../stores/useDataStore";
 import Link from "next/link";
 import { useLanguageStore } from "../stores/useLanguageStore";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function SpecialTours() {
   const { tours, toursLoading, fetchTours, toggleBookingModal } =
     useDataStore();
   const { language, currency } = useLanguageStore();
+  const home = useTranslations("HomePage");
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
@@ -50,16 +52,16 @@ export default function SpecialTours() {
         }
         transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}>
         <div>
-          <h2 className="text-[6.3vw] md:text-3xl font-bold text-gray-900 ">
-            Special Tours in Armenia
+          <h2 className="text-[6.3vw] md:text-[2.2vw] font-bold text-gray-900 ">
+            {home("specialTours")}
           </h2>
         </div>
 
-        <div className="gap-2 hidden md:flex">
-          <button className="swiper-button-prev-custom w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors">
+        <div className="gap-[1vw] hidden md:flex">
+          <button className="swiper-button-prev-custom w-[2.5vw] h-[2.5vw] rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer">
             <ChevronLeft className="w-5 h-5 text-blue-500" />
           </button>
-          <button className="swiper-button-next-custom w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors">
+          <button className="swiper-button-next-custom w-[2.5vw] h-[2.5vw] rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer">
             <ChevronRight className="w-5 h-5 text-blue-500" />
           </button>
         </div>
@@ -101,7 +103,7 @@ export default function SpecialTours() {
                 spaceBetween: 24,
               },
             }}
-            className="pb-4">
+            className="pb-[1vw]">
             {displayedTours.map((tour, index) => (
               <SwiperSlide key={tour._id}>
                 <motion.div
@@ -120,7 +122,7 @@ export default function SpecialTours() {
                     {/* Image */}
                     <Link
                       href={`/${language.code || "en"}/tour/${tour._id}`}>
-                      <div className="relative h-48 md:h-56 overflow-hidden">
+                      <div className="relative h-48 md:h-[15vw] overflow-hidden">
                         <Image
                           src={
                             tour.images && tour.images[0]
@@ -132,12 +134,12 @@ export default function SpecialTours() {
                           height={150}
                           className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                         />
-                        <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 md:px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+                        <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-[4vw] md:px-[1.2vw] py-[1.5vw] md:py-[.5vw] rounded-full text-xs font-semibold shadow-lg">
                           {tour.category || "Tour"}
                         </div>
-                        <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-3 md:px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
-                          {/* <DollarSign className="w-3 h-3 md:w-4 md:h-4 text-green-600" /> */}
-                          <span className="font-bold text-gray-900 text-sm md:text-base">
+                        <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-[4vw] md:px-[1.1vw] py-[1vw] md:py-[.5vw] rounded-full flex items-center gap-[1vw] md:gap-[.5vw] shadow-lg">
+                          {/* <DollarSign className="w-[3vw] h-[3vw] md:w-[1vw] md:h-[1vw] text-green-600" /> */}
+                          <span className="font-bold text-gray-900 text-sm md:text-[1.2vw]">
                             {tour.price?.length > 0 &&
                               (() => {
                                 const matchedPrice = tour.price.find(
@@ -152,61 +154,61 @@ export default function SpecialTours() {
                                 ) : null;
                               })()}
                           </span>
-                          <span className="text-xs text-gray-600">
-                            / person
+                          <span className="text-[3.5vw] md:text-[.9vw] text-gray-600">
+                            / {home("person")}
                           </span>
                         </div>
                       </div>
                     </Link>
 
                     {/* Content */}
-                    <div className="p-4 md:p-6">
+                    <div className="p-[5vw] md:p-[1.5vw]">
                       <Link
                         href={`/${language.code || "en"}/tour/${tour._id}`}>
-                        <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3 hover:text-blue-600 transition-colors cursor-pointer line-clamp-1">
+                        <h3 className="text-[5vw] md:text-[1.4vw] font-bold text-gray-900 mb-[2vw] md:mb-[.9vw] hover:text-blue-600 transition-colors cursor-pointer line-clamp-1">
                           {tour.name}
                         </h3>
 
-                        <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4 leading-relaxed line-clamp-2">
+                        <p className="text-gray-600 text-[3.7vw] md:text-[1vw] mb-[4vw] md:mb-[1vw] leading-relaxed line-clamp-2">
                           {tour.description ||
                             "Discover an amazing experience"}
                         </p>
 
                         {/* Tour Details */}
-                        <div className="space-y-2 mb-4 md:mb-5">
-                          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-700">
-                            <Clock className="w-3 h-3 md:w-4 md:h-4 text-blue-500 flex-shrink-0" />
+                        <div className="space-y-[2vw] md:space-y-[.6vw] mb-[1.5vw] md:mb-[1.5vw]">
+                          <div className="flex items-center gap-[2vw] md:gap-[.7vw] text-[3.5vw] md:text-[1vw] text-gray-700">
+                            <Clock className="w-[3vw] h-[3vw] md:w-[1vw] md:h-[1vw] text-blue-500 flex-shrink-0" />
                             <span className="font-medium">
-                              Duration:
+                              {home("duration")}:
                             </span>
                             <span className="truncate">
                               {tour.duration || "N/A"}
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-700">
-                            <Calendar className="w-3 h-3 md:w-4 md:h-4 text-blue-500 flex-shrink-0" />
-                            <span className="font-medium">Time:</span>
+                          <div className="flex items-center gap-[2vw] md:gap-[.7vw] text-[3.5vw] md:text-[1vw] text-gray-700">
+                            <Calendar className="w-[3vw] h-[3vw] md:w-[1vw] md:h-[1vw] text-blue-500 flex-shrink-0" />
+                            <span className="font-medium">{home("time")}:</span>
                             <span className="truncate">
                               {tour.startTime || "N/A"} -{" "}
                               {tour.endTime || "N/A"}
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-700">
-                            <MapPin className="w-3 h-3 md:w-4 md:h-4 text-blue-500 flex-shrink-0" />
+                          <div className="flex items-center gap-[2vw] md:gap-[.7vw] text-[3.5vw] md:text-[1vw] text-gray-700">
+                            <MapPin className="w-[3vw] h-[3vw] md:w-[1vw] md:h-[1vw] text-blue-500 flex-shrink-0" />
                             <span className="font-medium">
-                              Location:
+                              {home("location")}:
                             </span>
                             <span className="truncate">
                               {tour.location || "N/A"}
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-700">
-                            <Users className="w-3 h-3 md:w-4 md:h-4 text-blue-500 flex-shrink-0" />
+                          <div className="flex items-center gap-[2vw] md:gap-[.7vw] text-[3.5vw] md:text-[1vw] text-gray-700">
+                            <Users className="w-[3vw] h-[3vw] md:w-[1vw] md:h-[1vw] text-blue-500 flex-shrink-0" />
                             <span className="font-medium">
-                              Group:
+                              {home("group")}:
                             </span>
                             <span className="truncate">
                               {tour.groupSize || "N/A"}
@@ -221,8 +223,8 @@ export default function SpecialTours() {
                           e.stopPropagation(); // جلوی فعال شدن لینک را می‌گیرد
                           toggleBookingModal();
                         }}
-                        className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-2.5 md:py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105 text-sm md:text-base cursor-pointer">
-                        Book Now
+                        className="w-full bg-gradient-to-r mt-[3vw] md:mt-0 from-blue-500 to-cyan-500 text-white py-[3vw] md:py-[.8vw] rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105 text-[4vw] md:text-[1.1vw] cursor-pointer">
+                       {home("bookNow")}
                       </button>
                     </div>
                   </div>

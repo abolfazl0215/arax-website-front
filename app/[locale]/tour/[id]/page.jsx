@@ -22,6 +22,7 @@ import Navbar from "../../../../Components/Navbar";
 import Footer from "../../../../Components/Footer";
 import useDataStore from "../../../../stores/useDataStore"; // مسیر store را به درستی تنظیم کنید
 import { useLanguageStore } from "../../../../stores/useLanguageStore";
+import { useTranslations } from "next-intl";
 
 export default function TourDetailPage() {
   const params = useParams();
@@ -38,6 +39,8 @@ export default function TourDetailPage() {
   } = useDataStore();
   const { language, currency } = useLanguageStore();
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+
+  const singleTour = useTranslations("SingleTour");
 
   useEffect(() => {
     if (tourId) {
@@ -188,7 +191,7 @@ export default function TourDetailPage() {
                     ${tour.price[0].price}
                   </span>
                   <span className="text-sm text-gray-600">
-                    / person
+                    / {singleTour("person")}
                   </span>
                 </div>
               )}
@@ -301,7 +304,7 @@ export default function TourDetailPage() {
               {tour.description && (
                 <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
                   <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                    About This Tour
+                    {singleTour("AboutThisTour")}
                   </h2>
                   <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                     {tour.description}
@@ -312,7 +315,7 @@ export default function TourDetailPage() {
               {/* Tour Details */}
               <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Tour Details
+                  {singleTour("tourDetails")}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {tour.duration && (
@@ -322,7 +325,7 @@ export default function TourDetailPage() {
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">
-                          Duration
+                          {singleTour("duration")}
                         </p>
                         <p className="font-semibold text-gray-900">
                           {tour.duration}
@@ -337,7 +340,9 @@ export default function TourDetailPage() {
                         <Calendar className="w-6 h-6 text-purple-600" />
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Time</p>
+                        <p className="text-sm text-gray-600">
+                          {singleTour("time")}
+                        </p>
                         <p className="font-semibold text-gray-900">
                           {tour.startTime || "N/A"} -{" "}
                           {tour.endTime || "N/A"}
@@ -353,7 +358,7 @@ export default function TourDetailPage() {
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">
-                          Group Size
+                          {singleTour("groupSize")}
                         </p>
                         <p className="font-semibold text-gray-900">
                           {tour.groupSize}
@@ -369,7 +374,7 @@ export default function TourDetailPage() {
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">
-                          Location
+                          {singleTour("location")}
                         </p>
                         <p className="font-semibold text-gray-900">
                           {tour.location}
@@ -385,7 +390,7 @@ export default function TourDetailPage() {
                 tour.priceIncluded.length > 0 && (
                   <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      What's Included
+                      {singleTour("whatsIncluded")}
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {tour.priceIncluded.map((item, index) => (
@@ -409,7 +414,7 @@ export default function TourDetailPage() {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg sticky top-24">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  Book This Tour
+                  {singleTour("bookThisTour")}
                 </h3>
 
                 {/* Pricing */}
@@ -434,7 +439,7 @@ export default function TourDetailPage() {
                           })()}
                       </div>
                       <p className="text-sm text-gray-600">
-                        per person
+                        {singleTour("perPerson")}
                       </p>
                     </div>
                   </div>
@@ -450,7 +455,9 @@ export default function TourDetailPage() {
                 <div className="space-y-3 mb-6 p-4 bg-gray-50 rounded-lg">
                   {tour.duration && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Duration:</span>
+                      <span className="text-gray-600">
+                        {singleTour("duration")}:
+                      </span>
                       <span className="font-semibold text-gray-900">
                         {tour.duration}
                       </span>
@@ -459,7 +466,7 @@ export default function TourDetailPage() {
                   {tour.groupSize && (
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">
-                        Group Size:
+                        {singleTour("groupSize")}:
                       </span>
                       <span className="font-semibold text-gray-900">
                         {tour.groupSize}
@@ -469,7 +476,7 @@ export default function TourDetailPage() {
                   {tour.startTime && (
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">
-                        Start Time:
+                        {singleTour("startTime")}:
                       </span>
                       <span className="font-semibold text-gray-900">
                         {tour.startTime}
@@ -481,7 +488,7 @@ export default function TourDetailPage() {
                 <button
                   onClick={toggleBookingModal}
                   className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300 hover:scale-105 mb-4">
-                  Book Now
+                  {singleTour("bookNow")}
                 </button>
 
                 {/* <button className="w-full border-2 border-blue-500 text-blue-500 py-4 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300">
