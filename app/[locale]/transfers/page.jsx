@@ -9,13 +9,10 @@ import {
   Shield,
   Clock,
   X,
-  Phone,
-  Mail,
-  MessageCircle,
 } from "lucide-react";
 import Navbar from "../../../Components/Navbar";
 import Footer from "../../../Components/Footer";
-import useDataStore from "../../../stores/useDataStore"; // مسیر store را به درستی تنظیم کنید
+import useDataStore from "../../../stores/useDataStore";
 import { useLanguageStore } from "../../../stores/useLanguageStore";
 import { useTranslations } from "next-intl";
 
@@ -47,8 +44,6 @@ const TransferPage = () => {
   const [formErrors, setFormErrors] = useState({});
 
   const transferss = useTranslations("Transfers");
-
-  // دریافت داده‌ها و توابع از store
   const {
     transfers,
     transfersLoading,
@@ -58,41 +53,25 @@ const TransferPage = () => {
   } = useDataStore();
   const { currency } = useLanguageStore();
 
-  // بارگذاری ترانسفرها هنگام mount شدن کامپوننت
   useEffect(() => {
     fetchTransfers();
   }, [fetchTransfers]);
 
-  // تاریخ امروز برای محدود کردن انتخاب تاریخ‌های گذشته
-  const today = new Date().toISOString().slice(0, 16); // برای datetime-local
+  const today = new Date().toISOString().slice(0, 16);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    // پاک کردن خطا هنگام تغییر
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (formErrors[name]) {
-      setFormErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      setFormErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const handleSubmit = () => {
-    // Validation
     const errors = {};
-    if (!formData.from) {
-      errors.from = "Please select pickup location";
-    }
-    if (!formData.to) {
-      errors.to = "Please select destination";
-    }
-    if (!formData.when) {
-      errors.when = "Please select date and time";
-    }
+    if (!formData.from) errors.from = "Please select pickup location";
+    if (!formData.to) errors.to = "Please select destination";
+    if (!formData.when) errors.when = "Please select date and time";
     if (
       formData.from &&
       formData.to &&
@@ -107,57 +86,53 @@ const TransferPage = () => {
       return;
     }
 
-    // شروع جستجو با fake delay
     setSearchLoading(true);
     setFormErrors({});
 
     setTimeout(() => {
-      // نمایش همه ترانسفرها (در واقعیت می‌توان فیلتر کرد)
       setSearchResults(transfers);
       setSearchLoading(false);
       setShowResultsModal(true);
-    }, 1500); // 1.5 ثانیه delay
+    }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-[#f1f5f9]">
-      {/* Header Section */}
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      <div className="px-4 md:px-[10vw] pt-8 md:pt-16 pb-8 mt-[10vw]">
-        <h1 className="text-3xl md:text-[2.8vw] mt-[10vw] md:mt-0 font-bold mb-4 text-gray-900">
+      {/* Header Section */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 pt-24 md:pt-32 pb-8">
+        <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-3">
           {transferss("title1")}
         </h1>
-        <p className="text-slate-600 text-sm md:text-base max-w-3xl leading-relaxed">
+        <p className="text-gray-600 text-base md:text-lg max-w-3xl">
           {transferss("subTitle1")}
         </p>
       </div>
 
       {/* Booking Form Section */}
-      <div className="px-4 md:px-[10vw] pb-12">
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-            <Car className="w-7 h-7 text-blue-500" />
+      <div className="max-w-7xl mx-auto px-4 md:px-6 pb-12">
+        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+            <Car className="w-5 h-5 text-gray-700" />
             {transferss("bookYourTransfer")}
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* From */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-blue-500" />
+              <label className="block text-xs font-medium text-gray-700 mb-1.5 flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5" />
                 {transferss("from")}{" "}
-                <span className="text-red-500">*</span>
+                <span className="text-red-600">*</span>
               </label>
               <select
                 name="from"
                 value={formData.from}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-700 ${
-                  formErrors.from
-                    ? "border-red-500"
-                    : "border-gray-200"
-                }`}>
+                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent
+                  ${formErrors.from ? "border-red-500" : "border-gray-300"}
+                `}>
                 <option value="">Select pickup location</option>
                 {locations.map((location) => (
                   <option key={location} value={location}>
@@ -166,7 +141,7 @@ const TransferPage = () => {
                 ))}
               </select>
               {formErrors.from && (
-                <p className="text-red-500 text-xs mt-1">
+                <p className="text-red-600 text-xs mt-1">
                   {formErrors.from}
                 </p>
               )}
@@ -174,18 +149,18 @@ const TransferPage = () => {
 
             {/* To */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-green-500" />
+              <label className="block text-xs font-medium text-gray-700 mb-1.5 flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5" />
                 {transferss("to")}{" "}
-                <span className="text-red-500">*</span>
+                <span className="text-red-600">*</span>
               </label>
               <select
                 name="to"
                 value={formData.to}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-700 ${
-                  formErrors.to ? "border-red-500" : "border-gray-200"
-                }`}>
+                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent
+                  ${formErrors.to ? "border-red-500" : "border-gray-300"}
+                `}>
                 <option value="">Select destination</option>
                 {locations.map((location) => (
                   <option key={location} value={location}>
@@ -194,7 +169,7 @@ const TransferPage = () => {
                 ))}
               </select>
               {formErrors.to && (
-                <p className="text-red-500 text-xs mt-1">
+                <p className="text-red-600 text-xs mt-1">
                   {formErrors.to}
                 </p>
               )}
@@ -202,10 +177,10 @@ const TransferPage = () => {
 
             {/* When */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-purple-500" />
+              <label className="block text-xs font-medium text-gray-700 mb-1.5 flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5" />
                 {transferss("when")}{" "}
-                <span className="text-red-500">*</span>
+                <span className="text-red-600">*</span>
               </label>
               <input
                 type="datetime-local"
@@ -213,14 +188,12 @@ const TransferPage = () => {
                 value={formData.when}
                 onChange={handleInputChange}
                 min={today}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-white text-gray-700 ${
-                  formErrors.when
-                    ? "border-red-500"
-                    : "border-gray-200"
-                }`}
+                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent
+                  ${formErrors.when ? "border-red-500" : "border-gray-300"}
+                `}
               />
               {formErrors.when && (
-                <p className="text-red-500 text-xs mt-1">
+                <p className="text-red-600 text-xs mt-1">
                   {formErrors.when}
                 </p>
               )}
@@ -231,10 +204,10 @@ const TransferPage = () => {
               <button
                 onClick={handleSubmit}
                 disabled={searchLoading}
-                className="w-full md:w-auto px-8 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2">
+                className="w-full md:w-auto px-6 py-2.5 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm">
                 {searchLoading ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span>Searching...</span>
                   </>
                 ) : (
@@ -248,23 +221,23 @@ const TransferPage = () => {
 
       {/* Search Results Modal */}
       {showResultsModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-3xl bg-opacity-50 flex items-center justify-center z-40 p-4">
-          <div className="bg-white rounded-xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
             {/* Modal Header */}
-            <div className="flex justify-between items-center p-6 border-b">
+            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
               <div>
-                <h2 className="text-2xl font-semibold text-gray-800">
+                <h2 className="text-lg font-semibold text-gray-900">
                   Available Vehicles ({searchResults.length})
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-xs text-gray-600 mt-0.5">
                   {formData.from} → {formData.to} •{" "}
                   {new Date(formData.when).toLocaleString()}
                 </p>
               </div>
               <button
                 onClick={() => setShowResultsModal(false)}
-                className="text-gray-500 hover:text-gray-700 transition">
-                <X size={24} />
+                className="text-gray-400 hover:text-gray-600 transition-colors">
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -272,23 +245,22 @@ const TransferPage = () => {
             <div className="overflow-y-auto p-6">
               {searchResults.length === 0 ? (
                 <div className="text-center py-12">
-                  <Car className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 text-lg">
+                  <Car className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-500">
                     No vehicles available for this route.
                   </p>
-                  <p className="text-gray-400 text-sm mt-2">
+                  <p className="text-gray-400 text-sm mt-1">
                     Please try different locations or contact us
                     directly.
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {searchResults.map((vehicle) => (
                     <div
                       key={vehicle._id}
-                      className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
-                      {/* Vehicle Image */}
-                      <div className="relative h-48 overflow-hidden">
+                      className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full">
+                      <div className="relative h-44 overflow-hidden">
                         <img
                           src={
                             vehicle.image ||
@@ -297,82 +269,79 @@ const TransferPage = () => {
                           alt={vehicle.name}
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+                        <div className="absolute top-3 right-3 bg-white px-2.5 py-1 rounded-md text-xs font-semibold text-gray-900 shadow-sm">
                           {(() => {
                             const matchedPrice =
                               vehicle.pricePerKm.find(
                                 (p) => p.currency === currency.code,
                               );
-
                             return matchedPrice ? (
                               <span>
                                 {matchedPrice.price}
-                                {currency.symbol} {" /km "}
+                                {currency.symbol}/km
                               </span>
                             ) : null;
                           })()}
                         </div>
                       </div>
 
-                      {/* Vehicle Details */}
-                      <div className="p-4">
-                        <h3 className="text-lg font-bold text-gray-900 mb-3">
-                          {vehicle.name}
-                        </h3>
+                      <div className="p-4 flex flex-col flex-1">
+                        <div className="flex flex-col gap-4 flex-1 ">
+                          <h3 className="text-base font-semibold text-gray-900 mb-3 line-clamp-1">
+                            {vehicle.name}
+                          </h3>
 
-                        {/* Specs */}
-                        <div className="space-y-2 mb-4">
-                          <div className="flex items-center gap-2 text-sm text-gray-700">
-                            <Users className="w-4 h-4 text-blue-500" />
-                            <span>
-                              {vehicle.passengers || "N/A"} Passengers
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-sm text-gray-700">
-                            <Clock className="w-4 h-4 text-blue-500" />
-                            <span>
-                              {vehicle.releaseYear || "N/A"}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-sm text-gray-700">
-                            <Shield className="w-4 h-4 text-green-500" />
-                            <span>
-                              {vehicle.insurance
-                                ? "Full Coverage"
-                                : "Basic"}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Features */}
-                        {vehicle.features &&
-                          vehicle.features.length > 0 && (
-                            <div className="mb-4">
-                              <div className="flex flex-wrap gap-1.5">
-                                {vehicle.features
-                                  .slice(0, 3)
-                                  .map((feature, index) => (
-                                    <span
-                                      key={index}
-                                      className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">
-                                      {feature}
-                                    </span>
-                                  ))}
-                                {vehicle.features.length > 3 && (
-                                  <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                    +{vehicle.features.length - 3}
-                                  </span>
-                                )}
-                              </div>
+                          <div className="space-y-2 mb-4">
+                            <div className="flex items-center gap-2 text-xs text-gray-600">
+                              <Users className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>
+                                {vehicle.passengers || "N/A"}{" "}
+                                Passengers
+                              </span>
                             </div>
-                          )}
 
-                        {/* Select Button */}
+                            <div className="flex items-center gap-2 text-xs text-gray-600">
+                              <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>
+                                {vehicle.releaseYear || "N/A"}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-xs text-gray-600">
+                              <Shield className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>
+                                {vehicle.insurance
+                                  ? "Full Coverage"
+                                  : "Basic"}
+                              </span>
+                            </div>
+                          </div>
+
+                          {vehicle.features &&
+                            vehicle.features.length > 0 && (
+                              <div className="mb-4">
+                                <div className="flex flex-wrap gap-1.5">
+                                  {vehicle.features
+                                    .slice(0, 3)
+                                    .map((feature, index) => (
+                                      <span
+                                        key={index}
+                                        className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
+                                        {feature}
+                                      </span>
+                                    ))}
+                                  {vehicle.features.length > 3 && (
+                                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
+                                      +{vehicle.features.length - 3}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                        </div>
                         <button
                           onClick={toggleBookingModal}
-                          className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
+                          className="w-full bg-gray-900 text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors text-sm mt-auto">
                           Select Vehicle
                         </button>
                       </div>
@@ -387,147 +356,122 @@ const TransferPage = () => {
 
       {/* Loading State */}
       {transfersLoading && (
-        <div className="px-4 md:px-[10vw] py-12">
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-          </div>
+        <div className="flex justify-center items-center py-20">
+          <div className="w-12 h-12 border-3 border-gray-200 border-t-gray-900 rounded-full animate-spin" />
         </div>
       )}
 
       {/* Error State */}
       {transfersError && (
-        <div className="px-4 md:px-[10vw] py-12">
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8 rounded">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-red-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-700">
-                  Error loading transfers: {transfersError}
-                </p>
-              </div>
-            </div>
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p className="text-sm text-red-700">
+              Error loading transfers: {transfersError}
+            </p>
           </div>
         </div>
       )}
 
       {/* Our Vehicles Section */}
       {!transfersLoading && !transfersError && (
-        <div className="px-4 md:px-[10vw] py-12 md:py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 flex items-center gap-3">
-            <Car className="w-8 h-8 text-blue-500" />
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 pb-16">
+          <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-2 flex items-center gap-2">
+            <Car className="w-6 h-6" />
             {transferss("title2")}
           </h2>
-          <p className="text-gray-600 mb-10 max-w-2xl">
+          <p className="text-gray-600 mb-8 max-w-2xl">
             {transferss("subTitle2")}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {transfers.map((vehicle) => (
               <div
                 key={vehicle._id}
-                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                {/* Vehicle Image */}
-                <div className="relative h-56 overflow-hidden">
+                className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow flex flex-col h-full">
+                <div className="relative h-52 overflow-hidden">
                   <img
                     src={
                       vehicle.image ||
                       "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop"
                     }
                     alt={vehicle.name}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover"
                   />
-                  <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+                  <div className="absolute top-3 right-3 bg-white px-2.5 py-1 rounded-md text-xs font-semibold text-gray-900 shadow-sm">
                     {(() => {
                       const matchedPrice = vehicle.pricePerKm.find(
                         (p) => p.currency === currency.code,
                       );
-
                       return matchedPrice ? (
                         <span>
                           {matchedPrice.price}
-                          {currency.symbol} {" /km "}
+                          {currency.symbol}/km
                         </span>
                       ) : null;
                     })()}
                   </div>
                 </div>
 
-                {/* Vehicle Details */}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
-                    {vehicle.name}
-                  </h3>
+                <div className="p-4 flex flex-col flex-1">
+                  <div className="flex flex-col gap-4 flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 line-clamp-1">
+                      {vehicle.name}
+                    </h3>
 
-                  {/* Specs */}
-                  <div className="space-y-3 mb-5">
-                    <div className="flex items-center gap-3 text-gray-700">
-                      <Users className="w-5 h-5 text-blue-500" />
-                      <span className="font-medium text-sm">
-                        {transferss("passengers")}:
-                      </span>
-                      <span className="text-sm">
-                        {vehicle.passengers || "N/A"}{" "}
-                        {transferss("passengers")}
-                      </span>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <Users className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span className="font-medium">
+                          {transferss("passengers")}:
+                        </span>
+                        <span>{vehicle.passengers || "N/A"}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span className="font-medium">
+                          {transferss("releaseYear")}:
+                        </span>
+                        <span>{vehicle.releaseYear || "N/A"}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <Shield className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span className="font-medium">
+                          {transferss("Insurance")}:
+                        </span>
+                        <span>
+                          {vehicle.insurance
+                            ? "Full Coverage"
+                            : "Basic"}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-3 text-gray-700">
-                      <Clock className="w-5 h-5 text-blue-500" />
-                      <span className="font-medium text-sm">
-                        {transferss("releaseYear")}:
-                      </span>
-                      <span className="text-sm">
-                        {vehicle.releaseYear || "N/A"}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-3 text-gray-700">
-                      <Shield className="w-5 h-5 text-green-500" />
-                      <span className="font-medium text-sm">
-                        {transferss("Insurance")}:
-                      </span>
-                      <span className="text-sm">
-                        {vehicle.insurance
-                          ? "Full Coverage"
-                          : "Basic Coverage"}
-                      </span>
-                    </div>
+                    {vehicle.features &&
+                      vehicle.features.length > 0 && (
+                        <div className="mb-4">
+                          <p className="text-xs font-medium text-gray-700 mb-2">
+                            {transferss("Features")}:
+                          </p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {vehicle.features.map(
+                              (feature, index) => (
+                                <span
+                                  key={index}
+                                  className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
+                                  {feature}
+                                </span>
+                              ),
+                            )}
+                          </div>
+                        </div>
+                      )}
                   </div>
 
-                  {/* Features */}
-                  {vehicle.features &&
-                    vehicle.features.length > 0 && (
-                      <div className="mb-5">
-                        <p className="text-sm font-semibold text-gray-700 mb-2">
-                          {transferss("Features")}:
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {vehicle.features.map((feature, index) => (
-                            <span
-                              key={index}
-                              className="text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200">
-                              {feature}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                  {/* Book Button */}
                   <button
                     onClick={toggleBookingModal}
-                    className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">
+                    className="w-full bg-gray-900 text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors text-sm mt-auto">
                     {transferss("selectVehicle")}
                   </button>
                 </div>
@@ -535,10 +479,9 @@ const TransferPage = () => {
             ))}
           </div>
 
-          {/* No Results */}
           {transfers.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">
+              <p className="text-gray-500">
                 No vehicles available at the moment.
               </p>
             </div>
@@ -547,54 +490,51 @@ const TransferPage = () => {
       )}
 
       {/* Why Choose Us Section */}
-      <div className="px-4 md:px-[10vw] py-12 bg-gradient-to-r from-blue-50 to-cyan-50">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
-          {transferss("why")}
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Shield className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-2">
-              {transferss("whyTitle1")}
-            </h3>
-            <p className="text-sm text-gray-600">
-              {transferss("whyDesc1")}
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Clock className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-2">
-              {transferss("whyTitle2")}
-            </h3>
-            <p className="text-sm text-gray-600">
-              {transferss("whyDesc2")}
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Car className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-2">
-              {transferss("whyTitle3")}
-            </h3>
-            <p className="text-sm text-gray-600">
-              {transferss("whyDesc3")}
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-2">
-              {transferss("whyTitle4")}
-            </h3>
-            <p className="text-sm text-gray-600">
-              {transferss("whyDesc4")}
-            </p>
+      <div className="bg-gray-100 py-12">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-8 text-center">
+            {transferss("why")}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[
+              {
+                Icon: Shield,
+                title: "whyTitle1",
+                desc: "whyDesc1",
+                color: "bg-gray-900",
+              },
+              {
+                Icon: Clock,
+                title: "whyTitle2",
+                desc: "whyDesc2",
+                color: "bg-gray-700",
+              },
+              {
+                Icon: Car,
+                title: "whyTitle3",
+                desc: "whyDesc3",
+                color: "bg-gray-800",
+              },
+              {
+                Icon: Users,
+                title: "whyTitle4",
+                desc: "whyDesc4",
+                color: "bg-gray-600",
+              },
+            ].map(({ Icon, title, desc, color }) => (
+              <div key={title} className="text-center">
+                <div
+                  className={`w-14 h-14 ${color} rounded-full flex items-center justify-center mx-auto mb-3`}>
+                  <Icon className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2 text-base">
+                  {transferss(title)}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  {transferss(desc)}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

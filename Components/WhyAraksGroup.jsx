@@ -1,6 +1,5 @@
 "use client";
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import React from "react";
 import { Check } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -10,8 +9,6 @@ import { useLanguageStore } from "@/stores/useLanguageStore";
 export default function WhyAraksGroup() {
   const home = useTranslations("HomePage");
   const { language } = useLanguageStore();
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const features = [
     home("whyAraksOption1"),
@@ -21,184 +18,81 @@ export default function WhyAraksGroup() {
   ];
 
   return (
-    <div className="w-full overflow-hidden">
-      <motion.div
-        ref={ref}
-        className="max-w-full mx-auto px-[4vw] md:px-[8vw] mb-[20vw] md:mb-[10vw] mt-[10vw] md:mt-[3vw]"
-        initial={{ opacity: 0, y: 50 }}
-        animate={
-          isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
-        }
-        transition={{ duration: 0.6, ease: "easeOut" }}>
-        <div className="flex flex-wrap justify-between gap-[10vw] items-center">
+    <section className="w-full px-4 md:px-8 lg:px-16 py-12 md:py-16 lg:py-20">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          
           {/* Left Content */}
-          <motion.div
-            className="flex-1 order-1 min-w-0"
-            initial={{ opacity: 0, x: -30 }}
-            animate={
-              isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }
-            }
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}>
-            <motion.h2
-              className="text-[6.3vw] md:text-3xl font-bold text-gray-900 mb-6"
-              initial={{ opacity: 0, y: -20 }}
-              animate={
-                isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }
-              }
-              transition={{
-                duration: 0.5,
-                delay: 0.3,
-                ease: "easeOut",
-              }}>
+          <div className="space-y-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               {home("whyAraksGroup")}
-            </motion.h2>
+            </h2>
 
-            <motion.p
-              className="text-gray-600 leading-relaxed mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-              }
-              transition={{
-                duration: 0.5,
-                delay: 0.4,
-                ease: "easeOut",
-              }}>
+            <p className="text-gray-600 text-lg leading-relaxed">
               {home("whyAraksGroupDesc1")}
-            </motion.p>
+            </p>
 
             {/* Features List */}
-            <div className="space-y-4 mb-10">
+            <ul className="space-y-4">
               {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  className="flex items-start gap-3"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={
-                    isInView
-                      ? { opacity: 1, x: 0 }
-                      : { opacity: 0, x: -20 }
-                  }
-                  transition={{
-                    duration: 0.5,
-                    delay: 0.5 + index * 0.1,
-                    ease: "easeOut",
-                  }}>
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5">
-                    <Check
-                      className="w-4 h-4 text-blue-500"
-                      strokeWidth={3}
-                    />
+                <li key={index} className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-0.5">
+                    <Check className="w-4 h-4 text-blue-600" strokeWidth={3} />
                   </div>
-                  <p className="text-gray-800 leading-relaxed">
-                    {feature}
-                  </p>
-                </motion.div>
+                  <span className="text-gray-800 leading-relaxed">{feature}</span>
+                </li>
               ))}
-            </div>
+            </ul>
 
             {/* Read More Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-              }
-              transition={{
-                duration: 0.5,
-                delay: 0.9,
-                ease: "easeOut",
-              }}>
+            <div className="pt-4">
               <Link
                 href={`/${language.code}/about`}
-                className="inline-block px-6 py-2 bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer hover:bg-blue-600 text-white text-lg font-medium rounded-lg transition-colors shadow-lg hover:shadow-xl">
+                className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md">
                 {home("readMore")}
               </Link>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* Right Images Grid */}
-          <motion.div
-            className="w-[35%] order-2 hidden md:block"
-            initial={{ opacity: 0, x: 30 }}
-            animate={
-              isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }
-            }
-            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}>
-            <motion.div
-              className="w-full flex items-end gap-3 h-60"
-              initial={{ opacity: 0, y: 30 }}
-              animate={
-                isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
-              }
-              transition={{
-                duration: 0.6,
-                delay: 0.4,
-                ease: "easeOut",
-              }}>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={
-                  isInView
-                    ? { opacity: 1, scale: 1 }
-                    : { opacity: 0, scale: 0.9 }
-                }
-                transition={{
-                  duration: 0.5,
-                  delay: 0.5,
-                  ease: "easeOut",
-                }}
-                className="flex-1">
+          <div className="hidden lg:block">
+            <div className="space-y-4">
+              {/* Top Row - Two Images Side by Side */}
+              <div className="flex gap-4 items-end">
+                <div className="flex-1 h-40 rounded-lg overflow-hidden shadow-md">
+                  <Image
+                    src="/images/why1.webp"
+                    alt="Armenia landscape"
+                    width={300}
+                    height={160}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="flex-1 h-64 rounded-lg overflow-hidden shadow-md">
+                  <Image
+                    src="/images/why2.webp"
+                    alt="Armenia landscape"
+                    width={300}
+                    height={256}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+
+              {/* Bottom Row - Single Full Width Image */}
+              <div className="h-32 rounded-lg overflow-hidden shadow-md">
                 <Image
-                  width={200}
-                  height={200}
-                  src="/images/why1.webp"
+                  src="/images/why3.webp"
                   alt="Armenia landscape"
-                  className="w-full h-40 object-cover rounded-xl"
+                  width={600}
+                  height={128}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={
-                  isInView
-                    ? { opacity: 1, scale: 1 }
-                    : { opacity: 0, scale: 0.9 }
-                }
-                transition={{
-                  duration: 0.5,
-                  delay: 0.6,
-                  ease: "easeOut",
-                }}
-                className="flex-1">
-                <Image
-                  width={200}
-                  height={200}
-                  src="/images/why2.webp"
-                  alt="Armenia landscape"
-                  className="w-full object-cover rounded-xl h-64"
-                />
-              </motion.div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={
-                isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
-              }
-              transition={{
-                duration: 0.6,
-                delay: 0.7,
-                ease: "easeOut",
-              }}>
-              <Image
-                width={200}
-                height={200}
-                src="/images/why3.webp"
-                alt="Armenia landscape"
-                className="w-full mt-3 h-30 object-cover rounded-xl shadow-lg"
-              />
-            </motion.div>
-          </motion.div>
+              </div>
+            </div>
+          </div>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </section>
   );
 }

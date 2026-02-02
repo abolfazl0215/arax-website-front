@@ -1,18 +1,19 @@
 "use client";
-import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import { motion, useInView } from "framer-motion";
-import { ChevronLeft, ChevronRight, Play, Star } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  Star,
+  Quote,
+} from "lucide-react";
 import "swiper/css";
 import "swiper/css/navigation";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 export default function TravelerReviews() {
   const home = useTranslations("HomePage");
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const reviews = [
     {
@@ -20,7 +21,7 @@ export default function TravelerReviews() {
       title: "Really great",
       content:
         "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
-      author: "Sara moradi",
+      author: "Sara Moradi",
       tourInfo: "Istanbul tour 12/10/2035",
       rating: 5,
       videoThumbnail:
@@ -31,7 +32,7 @@ export default function TravelerReviews() {
       title: "Really great",
       content:
         "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
-      author: "Sara moradi",
+      author: "Sara Moradi",
       tourInfo: "Istanbul tour 12/10/2035",
       rating: 5,
       videoThumbnail:
@@ -42,7 +43,7 @@ export default function TravelerReviews() {
       title: "Really great",
       content:
         "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
-      author: "Sara moradi",
+      author: "Sara Moradi",
       tourInfo: "Istanbul tour 12/10/2035",
       rating: 5,
       videoThumbnail:
@@ -51,200 +52,127 @@ export default function TravelerReviews() {
   ];
 
   return (
-    <motion.section
-      ref={ref}
-      className="px-[4vw] md:px-[8vw] py-[8vw] md:py-[6vw] w-full overflow-hidden"
-      initial={{ opacity: 0, y: 50 }}
-      animate={
-        isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
-      }
-      transition={{ duration: 0.6, ease: "easeOut" }}>
-      <motion.div
-        className="w-full bg-[#012710] grid-bg-dark py-[7vw] md:py-[2vw] pl-[6vw] md:pl-[3vw] rounded-xl md:rounded-3xl"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={
-          isInView
-            ? { opacity: 1, scale: 1 }
-            : { opacity: 0, scale: 0.95 }
-        }
-        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}>
-        <div className="mx-auto">
-          {/* FLEX CONTAINER */}
-          <div className="flex flex-col  lg:flex-row gap-[2vw] items-center">
-            {/* LEFT SECTION */}
-            <motion.div
-              className="w-full lg:w-[28%] flex flex-col justify-evenly text-white"
-              initial={{ opacity: 0, x: -50 }}
-              animate={
-                isInView
-                  ? { opacity: 1, x: 0 }
-                  : { opacity: 0, x: -50 }
-              }
-              transition={{
-                duration: 0.6,
-                delay: 0.3,
-                ease: "easeOut",
-              }}>
-              <h2 className="text-[6.3vw] md:text-3xl font-bold w-full text-center">
-                {home("travelerReviews")}
-              </h2>
-
-              {/* Illustration */}
-              <motion.div
-                className="flex justify-center items-center relative"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={
-                  isInView
-                    ? { opacity: 1, scale: 1 }
-                    : { opacity: 0, scale: 0.8 }
-                }
-                transition={{
-                  duration: 0.6,
-                  delay: 0.5,
-                  ease: "easeOut",
-                }}>
-                <Image
-                  src="/images/testimonial.png"
-                  alt="Traveler"
-                  width={256}
-                  height={256}
-                  className="w-[16vw] object-contain mt-[4vw] hidden md:block"
-                />
-              </motion.div>
-
-              {/* Navigation Buttons */}
-              <motion.div
-                className="hidden md:flex gap-8 justify-center mt-[3vw]"
-                initial={{ opacity: 0, y: 20 }}
-                animate={
-                  isInView
-                    ? { opacity: 1, y: 0 }
-                    : { opacity: 0, y: 20 }
-                }
-                transition={{
-                  duration: 0.5,
-                  delay: 0.6,
-                  ease: "easeOut",
-                }}>
-                <button className="review-button-prev w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer">
-                  <ChevronLeft className="w-6 h-6 text-white" />
-                </button>
-                <button className="review-button-next w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer">
-                  <ChevronRight className="w-6 h-6 text-white" />
-                </button>
-              </motion.div>
-            </motion.div>
-
-            {/* RIGHT SECTION */}
-            <motion.div
-              className="w-full lg:w-[72%]"
-              initial={{ opacity: 0, x: 50 }}
-              animate={
-                isInView
-                  ? { opacity: 1, x: 0 }
-                  : { opacity: 0, x: 50 }
-              }
-              transition={{
-                duration: 0.6,
-                delay: 0.4,
-                ease: "easeOut",
-              }}>
-              <Swiper
-                modules={[Navigation]}
-                spaceBetween={15}
-                slidesPerView={1.1}
-                dir="ltr"
-                navigation={{
-                  prevEl: ".review-button-prev",
-                  nextEl: ".review-button-next",
-                }}
-                breakpoints={{
-                  768: {
-                    slidesPerView: 2.2,
-                  },
-                }}>
-                {reviews.map((review, index) => (
-                  <SwiperSlide key={review.id}>
-                    <motion.div
-                      className="bg-white rounded-xl overflow-hidden shadow-xl h-full"
-                      initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                      animate={
-                        isInView
-                          ? { opacity: 1, y: 0, scale: 1 }
-                          : { opacity: 0, y: 30, scale: 0.95 }
-                      }
-                      transition={{
-                        duration: 0.5,
-                        delay: 0.5 + index * 0.1,
-                        ease: "easeOut",
-                      }}>
-                      {/* Video */}
-                      <div className="relative h-56 bg-gray-900">
-                        <img
-                          src={review.videoThumbnail}
-                          alt={review.title}
-                          className="w-full h-full object-cover opacity-80"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <button className="w-16 h-16 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-all hover:scale-110">
-                            <Play
-                              className="w-6 h-6 text-gray-900 ml-1"
-                              fill="currentColor"
-                            />
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className="p-6">
-                        <h3 className="text-xl font-bold text-gray-900 mb-3">
-                          {review.title}
-                        </h3>
-                        <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                          {review.content}
-                        </p>
-
-                        {/* Author */}
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="text-blue-600 font-semibold text-sm">
-                              {review.author.charAt(0).toUpperCase()}
-                            </span>
-                          </div>
-
-                          <div className="flex-1">
-                            <div className="flex justify-between items-center">
-                              <p className="text-sm font-semibold text-gray-900">
-                                {review.author}
-                              </p>
-
-                              <div className="flex gap-1">
-                                {[...Array(review.rating)].map(
-                                  (_, i) => (
-                                    <Star
-                                      key={i}
-                                      className="w-[3vw] h-[3vw] md:w-[1vw] md:h-[1vw] text-yellow-400"
-                                      fill="currentColor"
-                                    />
-                                  ),
-                                )}
-                              </div>
-                            </div>
-
-                            <div className="text-xs text-gray-500">
-                              {review.tourInfo}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </motion.div>
-          </div>
+    <section className="px-4 md:px-8 lg:px-16 py-12 md:py-16 lg:py-20 w-full bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+            {home("travelerReviews")}
+          </h2>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Hear what our travelers have to say about their
+            experiences
+          </p>
         </div>
-      </motion.div>
-    </motion.section>
+
+        {/* Reviews Container */}
+        <div className="bg-slate-900 rounded-xl p-6 md:p-8 lg:p-12 relative overflow-hidden">
+          {/* Decorative Quote Icon */}
+          <div className="absolute top-8 left-8 opacity-10">
+            <Quote className="w-24 h-24 text-white" />
+          </div>
+
+          {/* Navigation Buttons - Desktop */}
+          <div className="hidden md:flex gap-3 justify-end mb-6">
+            <button
+              className="review-button-prev w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all"
+              aria-label="Previous review">
+              <ChevronLeft className="w-5 h-5 text-white" />
+            </button>
+            <button
+              className="review-button-next w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all"
+              aria-label="Next review">
+              <ChevronRight className="w-5 h-5 text-white" />
+            </button>
+          </div>
+
+          {/* Swiper */}
+          <Swiper
+            modules={[Navigation]}
+            spaceBetween={10}
+            slidesPerView={1.1}
+            dir="ltr"
+            navigation={{
+              prevEl: ".review-button-prev",
+              nextEl: ".review-button-next",
+            }}
+            breakpoints={{
+              640: {
+                slidesPerView: 1.5,
+                spaceBetween: 20,
+              },
+              1024: {
+                slidesPerView: 2.5,
+                spaceBetween: 24,
+              },
+            }}>
+            {reviews.map((review) => (
+              <SwiperSlide key={review.id}>
+                <article className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow h-full">
+                  {/* Video Thumbnail */}
+                  <div className="relative h-48 bg-gray-900 group">
+                    <img
+                      src={review.videoThumbnail}
+                      alt={review.title}
+                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <button
+                        className="w-14 h-14 rounded-full bg-white hover:bg-blue-600 flex items-center justify-center transition-all hover:scale-110 group"
+                        aria-label="Play video">
+                        <Play
+                          className="w-5 h-5 text-gray-900 group-hover:text-white ml-0.5 transition-colors"
+                          fill="currentColor"
+                        />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-5">
+                    {/* Rating */}
+                    <div className="flex gap-1 mb-3">
+                      {[...Array(review.rating)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className="w-4 h-4 text-yellow-400"
+                          fill="currentColor"
+                        />
+                      ))}
+                    </div>
+
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                      {review.title}
+                    </h3>
+
+                    <p className="text-sm text-gray-600 leading-relaxed mb-5 line-clamp-3">
+                      {review.content}
+                    </p>
+
+                    {/* Author Info */}
+                    <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-blue-600 font-semibold text-sm">
+                          {review.author.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 truncate">
+                          {review.author}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {review.tourInfo}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </div>
+    </section>
   );
 }

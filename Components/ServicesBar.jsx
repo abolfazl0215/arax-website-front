@@ -1,19 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { X, Phone, Mail, MessageCircle, MapPin } from "lucide-react";
+import { X, MapPin, Calendar, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import useDataStore from "../stores/useDataStore";
 import { useLanguageStore } from "../stores/useLanguageStore";
-import { motion, AnimatePresence } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 
 const ServicesBar = () => {
   const t = useTranslations("Navigation");
   const home = useTranslations("HomePage");
-
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const [activeTab, setActiveTab] = useState("tours");
   const [loading, setLoading] = useState(false);
@@ -78,12 +72,9 @@ const ServicesBar = () => {
       const checkIn = document.getElementById("checkIn").value;
       const checkOut = document.getElementById("checkOut").value;
 
-      if (!checkIn) {
-        newErrors.checkIn = "Please select check-in date";
-      }
-      if (!checkOut) {
+      if (!checkIn) newErrors.checkIn = "Please select check-in date";
+      if (!checkOut)
         newErrors.checkOut = "Please select check-out date";
-      }
       if (
         checkIn &&
         checkOut &&
@@ -97,12 +88,10 @@ const ServicesBar = () => {
         document.getElementById("startingDate").value;
       const endingDate = document.getElementById("endingDate").value;
 
-      if (!startingDate) {
+      if (!startingDate)
         newErrors.startingDate = "Please select starting date";
-      }
-      if (!endingDate) {
+      if (!endingDate)
         newErrors.endingDate = "Please select ending date";
-      }
       if (
         startingDate &&
         endingDate &&
@@ -114,10 +103,8 @@ const ServicesBar = () => {
     } else if (activeTab === "transfers") {
       const transferWhen =
         document.getElementById("transferWhen").value;
-
-      if (!transferWhen) {
+      if (!transferWhen)
         newErrors.transferWhen = "Please select a date";
-      }
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -163,7 +150,7 @@ const ServicesBar = () => {
 
       setSearchResults(results);
       setShowModal(true);
-    }, 1000);
+    }, 800);
   };
 
   const handleBooking = (item) => {
@@ -172,106 +159,53 @@ const ServicesBar = () => {
   };
 
   return (
-    <section className="w-full overflow-hidden">
-      <motion.div
-        ref={ref}
-        className="px-[4vw] md:px-[8vw] pb-[19vw] md:py-[5vw] md:pb-[8vw]"
-        initial={{ opacity: 0, y: 50 }}
-        animate={
-          isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
-        }
-        transition={{ duration: 0.6, ease: "easeOut" }}>
-        <motion.div
-          className="bg-white w-full rounded-xl pt-[4vw] md:pt-[1vw] pb-[4vw] md:pb-[1vw] px-[5vw] md:px-[3vw] shadow-sm"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={
-            isInView
-              ? { opacity: 1, scale: 1 }
-              : { opacity: 0, scale: 0.95 }
-          }
-          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}>
+    <section className="w-full py-12 md:py-16 lg:py-20 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 md:p-8">
           {/* Tabs */}
-          <motion.ul
-            className="flex flex-wrap gap-[7vw] md:gap-[3vw] justify-center items-center border-b border-gray-200 text-[#4B4B4B] pb-[3vw] md:pb-[1vw]"
-            initial={{ opacity: 0, y: -20 }}
-            animate={
-              isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }
-            }
-            transition={{
-              duration: 0.5,
-              delay: 0.3,
-              ease: "easeOut",
-            }}>
-            <li
-              onClick={() => setActiveTab("stays")}
-              className={`cursor-pointer transition-all hover:text-teal-600 rounded-lg p-[1.5vw] px-[4vw] md:p-[0.5vw] md:px-[1.5vw] text-[3.9vw] md:text-[1.1vw] ${
-                activeTab === "stays"
-                  ? "bg-teal-900/7 text-black "
-                  : ""
-              }`}>
-              {home("stays")}
-            </li>
-            <li
-              onClick={() => setActiveTab("tours")}
-              className={`cursor-pointer transition-all hover:text-teal-600 rounded-lg p-[1.5vw] px-[4vw] md:p-[0.5vw] md:px-[1.5vw] text-[3.9vw] md:text-[1.1vw] ${
-                activeTab === "tours"
-                  ? "bg-teal-900/7 text-black "
-                  : ""
-              }`}>
-              {home("tours")}
-            </li>
-            <li
-              onClick={() => setActiveTab("transfers")}
-              className={`cursor-pointer transition-all hover:text-teal-600 rounded-lg p-[1.5vw] px-[4vw] md:p-[0.5vw] md:px-[1.5vw] text-[3.9vw] md:text-[1.1vw] ${
-                activeTab === "transfers"
-                  ? "bg-teal-900/7 text-black "
-                  : ""
-              }`}>
-              {home("transfers")}
-            </li>
-          </motion.ul>
+          <div className="flex gap-2 border-b border-gray-200 mb-8 overflow-x-auto md:overflow-visible no-scrollbar">
+            {["stays", "tours", "transfers"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-6 py-3 text-sm md:text-base font-medium transition-all relative ${
+                  activeTab === tab
+                    ? "text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}>
+                {home(tab)}
+                {activeTab === tab && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" />
+                )}
+              </button>
+            ))}
+          </div>
 
-          {/* Stays Tab */}
+          {/* Stays Form */}
           {activeTab === "stays" && (
-            <motion.div
-              className="mt-[8vw] md:mt-[2vw] flex flex-col md:flex-row gap-[4vw] md:gap-[1.5vw]"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="staysType"
-                  className="text-[4vw] md:text-[1vw] text-gray-700 block">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("staysType")}
                 </label>
                 <select
-                  className="border w-full border-slate-300 p-[3vw] md:p-[0.5vw] rounded-lg px-[1vw] md:px-[0.5vw] mt-[2vw] md:mt-[0.5vw] capitalize text-[4vw] md:text-[1vw]"
-                  name="staysType"
-                  id="staysType">
+                  id="staysType"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                   {staysTypes.map((type) => (
-                    <option
-                      key={type}
-                      value={type.toLowerCase()}
-                      className="capitalize">
+                    <option key={type} value={type.toLowerCase()}>
                       {type}
                     </option>
                   ))}
                 </select>
-                <p className="text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] h-[4vw] md:h-[1.2vw] opacity-0">
-                  Placeholder
-                </p>
               </div>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="staysLocation"
-                  className="text-[4vw] md:text-[1vw] text-gray-700 block">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("whereAreYouGoing")}
                 </label>
                 <select
-                  className="border w-full border-slate-300 p-[3vw] md:p-[0.5vw] rounded-lg px-[1vw] md:px-[0.5vw] mt-[2vw] md:mt-[0.5vw] text-[4vw] md:text-[1vw]"
-                  name="staysLocation"
-                  id="staysLocation">
+                  id="staysLocation"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                   {staysLocations.map((location) => (
                     <option
                       key={location}
@@ -280,14 +214,10 @@ const ServicesBar = () => {
                     </option>
                   ))}
                 </select>
-                <p className="text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] h-[4vw] md:h-[1.2vw] opacity-0">
-                  Placeholder
-                </p>
               </div>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="checkIn"
-                  className="text-[4vw] md:text-[1vw] text-gray-700 block">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("checkIn")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
@@ -295,21 +225,21 @@ const ServicesBar = () => {
                   type="date"
                   id="checkIn"
                   min={today}
-                  className={`border w-full mt-[2vw] md:mt-[0.5vw] p-[3vw] md:p-[0.5vw] rounded-lg text-[4vw] md:text-[1vw] ${
+                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm ${
                     errors.checkIn
                       ? "border-red-500"
-                      : "border-slate-300"
+                      : "border-gray-300"
                   }`}
                 />
-                <p
-                  className={`text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] h-[4vw] md:h-[1.2vw] ${errors.checkIn ? "text-red-500" : "opacity-0"}`}>
-                  {errors.checkIn || "Placeholder"}
-                </p>
+                {errors.checkIn && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.checkIn}
+                  </p>
+                )}
               </div>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="checkOut"
-                  className="text-[4vw] md:text-[1vw] text-gray-700 block">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("checkOut")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
@@ -317,70 +247,62 @@ const ServicesBar = () => {
                   type="date"
                   id="checkOut"
                   min={today}
-                  className={`border w-full mt-[2vw] md:mt-[0.5vw] p-[3vw] md:p-[0.5vw] rounded-lg text-[4vw] md:text-[1vw] ${
+                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm ${
                     errors.checkOut
                       ? "border-red-500"
-                      : "border-slate-300"
+                      : "border-gray-300"
                   }`}
                 />
-                <p
-                  className={`text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] h-[4vw] md:h-[1.2vw] ${errors.checkOut ? "text-red-500" : "opacity-0"}`}>
-                  {errors.checkOut || "Placeholder"}
-                </p>
+                {errors.checkOut && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.checkOut}
+                  </p>
+                )}
               </div>
-              <div className="flex-shrink-0">
+
+              <div className="flex items-end">
                 <button
                   onClick={handleSearch}
                   disabled={loading || staysLoading}
-                  className="bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer text-white px-[3vw] md:px-[1.5vw] py-[5.5vw] md:py-[0.5vw] rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed h-[8vw] md:h-[2.6vw] flex items-center justify-center mt-[5.5vw] md:mt-[1.9vw] text-[4vw] md:text-[1vw]">
+                  className="w-full bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm flex items-center justify-center gap-2">
                   {loading || staysLoading ? (
-                    <div className="w-[4vw] h-[4vw] md:w-[1.2vw] md:h-[1.2vw] border-[0.4vw] md:border-[0.15vw] border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    home("search")
+                    <>
+                      <Search className="w-4 h-4" />
+                      {home("search")}
+                    </>
                   )}
                 </button>
               </div>
-            </motion.div>
+            </div>
           )}
 
-          {/* Tours Tab */}
+          {/* Tours Form */}
           {activeTab === "tours" && (
-            <motion.div
-              className="mt-[8vw] md:mt-[2vw] flex flex-col md:flex-row gap-[4vw] md:gap-[1.5vw]"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="tourType"
-                  className="text-[4vw] md:text-[1vw] text-gray-700 block">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("tourType")}
                 </label>
                 <select
-                  className="border w-full border-slate-300 p-[3vw] md:p-[0.5vw] rounded-lg px-[1vw] md:px-[0.5vw] mt-[2vw] md:mt-[0.5vw] text-[4vw] md:text-[1vw]"
-                  name="tourType"
-                  id="tourType">
+                  id="tourType"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                   {tourTypes.map((type) => (
                     <option key={type} value={type.toLowerCase()}>
                       {type}
                     </option>
                   ))}
                 </select>
-                <p className="text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] h-[4vw] md:h-[1.2vw] opacity-0">
-                  Placeholder
-                </p>
               </div>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="tourLocation"
-                  className="text-[4vw] md:text-[1vw] text-gray-700 block">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("whereAreYouGoing")}
                 </label>
                 <select
-                  className="border w-full border-slate-300 p-[3vw] md:p-[0.5vw] rounded-lg px-[1vw] md:px-[0.5vw] mt-[2vw] md:mt-[0.5vw] text-[4vw] md:text-[1vw]"
-                  name="tourLocation"
-                  id="tourLocation">
+                  id="tourLocation"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                   {tourLocations.map((location) => (
                     <option
                       key={location}
@@ -389,14 +311,10 @@ const ServicesBar = () => {
                     </option>
                   ))}
                 </select>
-                <p className="text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] h-[4vw] md:h-[1.2vw] opacity-0">
-                  Placeholder
-                </p>
               </div>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="startingDate"
-                  className="text-[4vw] md:text-[1vw] text-gray-700 block">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("startingDate")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
@@ -404,21 +322,21 @@ const ServicesBar = () => {
                   type="date"
                   id="startingDate"
                   min={today}
-                  className={`border w-full mt-[2vw] md:mt-[0.5vw] p-[3vw] md:p-[0.5vw] rounded-lg text-[4vw] md:text-[1vw] ${
+                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm ${
                     errors.startingDate
                       ? "border-red-500"
-                      : "border-slate-300"
+                      : "border-gray-300"
                   }`}
                 />
-                <p
-                  className={`text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] h-[4vw] md:h-[1.2vw] ${errors.startingDate ? "text-red-500" : "opacity-0"}`}>
-                  {errors.startingDate || "Placeholder"}
-                </p>
+                {errors.startingDate && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.startingDate}
+                  </p>
+                )}
               </div>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="endingDate"
-                  className="text-[4vw] md:text-[1vw] text-gray-700 block">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("endingDate")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
@@ -426,50 +344,47 @@ const ServicesBar = () => {
                   type="date"
                   id="endingDate"
                   min={today}
-                  className={`border w-full mt-[2vw] md:mt-[0.5vw] p-[3vw] md:p-[0.5vw] rounded-lg text-[4vw] md:text-[1vw] ${
+                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm ${
                     errors.endingDate
                       ? "border-red-500"
-                      : "border-slate-300"
+                      : "border-gray-300"
                   }`}
                 />
-                <p
-                  className={`text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] h-[4vw] md:h-[1.2vw] ${errors.endingDate ? "text-red-500" : "opacity-0"}`}>
-                  {errors.endingDate || "Placeholder"}
-                </p>
+                {errors.endingDate && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.endingDate}
+                  </p>
+                )}
               </div>
-              <div className="flex-shrink-0">
+
+              <div className="flex items-end">
                 <button
                   onClick={handleSearch}
                   disabled={loading || toursLoading}
-                  className="bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer text-white px-[3vw] md:px-[1.5vw] py-[5.5vw] md:py-[0.5vw] rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed h-[8vw] md:h-[2.6vw] flex items-center justify-center mt-[5.5vw] md:mt-[1.9vw] text-[4vw] md:text-[1vw]">
+                  className="w-full bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm flex items-center justify-center gap-2">
                   {loading || toursLoading ? (
-                    <div className="w-[4vw] h-[4vw] md:w-[1.2vw] md:h-[1.2vw] border-[0.4vw] md:border-[0.15vw] border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    home("search")
+                    <>
+                      <Search className="w-4 h-4" />
+                      {home("search")}
+                    </>
                   )}
                 </button>
               </div>
-            </motion.div>
+            </div>
           )}
 
-          {/* Transfers Tab */}
+          {/* Transfers Form */}
           {activeTab === "transfers" && (
-            <motion.div
-              className="mt-[8vw] md:mt-[2vw] flex flex-col md:flex-row md:items-end gap-[4vw] md:gap-[1.5vw]"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="transferFrom"
-                  className="text-[4vw] md:text-[1vw] text-gray-700">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("from")}
                 </label>
                 <select
-                  className="border w-full border-slate-300 p-[3vw] md:p-[0.5vw] rounded-lg px-[1vw] md:px-[0.5vw] mt-[2vw] md:mt-[0.5vw] text-[4vw] md:text-[1vw]"
-                  name="transferFrom"
-                  id="transferFrom">
+                  id="transferFrom"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                   {transferLocations.map((location) => (
                     <option
                       key={location}
@@ -478,18 +393,15 @@ const ServicesBar = () => {
                     </option>
                   ))}
                 </select>
-                <p className="text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] min-h-[3vw] md:min-h-[1vw]"></p>
               </div>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="transferTo"
-                  className="text-[4vw] md:text-[1vw] text-gray-700">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("to")}
                 </label>
                 <select
-                  className="border w-full border-slate-300 p-[3vw] md:p-[0.5vw] rounded-lg px-[1vw] md:px-[0.5vw] mt-[2vw] md:mt-[0.5vw] text-[4vw] md:text-[1vw]"
-                  name="transferTo"
-                  id="transferTo">
+                  id="transferTo"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                   {transferLocations.map((location) => (
                     <option
                       key={location}
@@ -498,12 +410,10 @@ const ServicesBar = () => {
                     </option>
                   ))}
                 </select>
-                <p className="text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] min-h-[3vw] md:min-h-[1vw]"></p>
               </div>
-              <div className="flex-1 w-full">
-                <label
-                  htmlFor="transferWhen"
-                  className="text-[4vw] md:text-[1vw] text-gray-700">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {home("when")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
@@ -511,296 +421,269 @@ const ServicesBar = () => {
                   type="date"
                   id="transferWhen"
                   min={today}
-                  className={`border w-full mt-[2vw] md:mt-[0.5vw] p-[3vw] md:p-[0.5vw] rounded-lg text-[4vw] md:text-[1vw] ${
+                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm ${
                     errors.transferWhen
                       ? "border-red-500"
-                      : "border-slate-300"
+                      : "border-gray-300"
                   }`}
                 />
                 {errors.transferWhen && (
-                  <p className="text-red-500 text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] min-h-[3vw] md:min-h-[1vw]">
+                  <p className="text-red-500 text-xs mt-1">
                     {errors.transferWhen}
                   </p>
                 )}
-                {!errors.transferWhen && (
-                  <div className="min-h-[3vw] md:min-h-[1vw] mt-[0.5vw]"></div>
-                )}
               </div>
-              <div>
+
+              <div className="flex items-end">
                 <button
                   onClick={handleSearch}
                   disabled={loading || transfersLoading}
-                  className="bg-gradient-to-r from-blue-400 to-blue-500 cursor-pointer text-white px-[3vw] md:px-[1.5vw] p-[5.5vw] md:p-[0.5vw] rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed h-[8vw] md:h-[2.6vw] flex items-center justify-center text-[4vw] md:text-[1vw]">
+                  className="w-full bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm flex items-center justify-center gap-2">
                   {loading || transfersLoading ? (
-                    <div className="w-[4vw] h-[4vw] md:w-[1.2vw] md:h-[1.2vw] border-[0.4vw] md:border-[0.15vw] border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    home("search")
+                    <>
+                      <Search className="w-4 h-4" />
+                      {home("search")}
+                    </>
                   )}
                 </button>
-                <p className="text-[2.5vw] md:text-[0.75vw] mt-[0.5vw] min-h-[3vw] md:min-h-[1vw]"></p>
               </div>
-            </motion.div>
+            </div>
           )}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
-      {/* Results Modal با انیمیشن */}
-      <AnimatePresence>
-        {showModal && (
-          <motion.div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-40 p-[2vw]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={() => setShowModal(false)}>
-            <motion.div
-              className="bg-white rounded-xl w-full max-w-[90vw] md:max-w-[80vw] max-h-[90vh] overflow-hidden flex flex-col"
-              initial={{ scale: 0.8, y: 50, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.8, y: 50, opacity: 0 }}
-              transition={{
-                type: "spring",
-                damping: 25,
-                stiffness: 300,
-              }}
-              onClick={(e) => e.stopPropagation()}>
-              {/* Modal Header */}
-              <motion.div
-                className="flex justify-between items-center p-[3vw] md:p-[1.5vw] border-b"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.3 }}>
-                <h2 className="text-[5vw] md:text-[1.5vw] font-semibold text-gray-800">
-                  {activeTab === "stays" &&
-                    `Available Stays (${searchResults.length})`}
-                  {activeTab === "tours" &&
-                    `Available Tours (${searchResults.length})`}
-                  {activeTab === "transfers" &&
-                    `Available Transfers (${searchResults.length})`}
-                </h2>
-                <motion.button
-                  onClick={() => setShowModal(false)}
-                  className="text-gray-500 hover:text-gray-700 transition"
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-                  <X className="md:w-[1.5vw] md:h-[1.5vw] w-[5vw] h-[5vw]" />
-                </motion.button>
-              </motion.div>
+      {/* Results Modal */}
+      {showModal && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-40 p-4"
+          onClick={() => setShowModal(false)}>
+          <div
+            className="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">
+                {activeTab === "stays" &&
+                  `Available Stays (${searchResults.length})`}
+                {activeTab === "tours" &&
+                  `Available Tours (${searchResults.length})`}
+                {activeTab === "transfers" &&
+                  `Available Transfers (${searchResults.length})`}
+              </h2>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
 
-              {/* Modal Content */}
-              <div className="overflow-y-auto p-[3vw] md:p-[1.5vw]">
-                {searchResults.length === 0 ? (
-                  <motion.div
-                    className="text-center py-[8vw] md:py-[3vw]"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2 }}>
-                    <p className="text-gray-500 text-[4vw] md:text-[1.2vw]">
-                      No results found. Please try different search criteria.
-                    </p>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    className="grid grid-cols-1 md:grid-cols-2 gap-[3vw] md:gap-[1.5vw]"
-                    initial="hidden"
-                    animate="show"
-                    variants={{
-                      hidden: { opacity: 0 },
-                      show: {
-                        opacity: 1,
-                        transition: {
-                          staggerChildren: 0.1,
-                        },
-                      },
-                    }}>
-                    {searchResults.map((item, index) => (
-                      <motion.div
-                        key={item._id}
-                        variants={{
-                          hidden: { opacity: 0, y: 20, scale: 0.95 },
-                          show: {
-                            opacity: 1,
-                            y: 0,
-                            scale: 1,
-                            transition: {
-                              type: "spring",
-                              damping: 20,
-                              stiffness: 300,
-                            },
-                          },
-                        }}
-                        whileHover={{
-                          y: -5,
-                          boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
-                        }}
-                        className="border border-gray-200 rounded-lg overflow-hidden transition">
-                        <motion.img
-                          src={
-                            activeTab === "stays"
+            {/* Modal Content */}
+            <div className="overflow-y-auto p-6">
+              {searchResults.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 text-lg">
+                    No results found. Please try different search
+                    criteria.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {searchResults.map((item) => (
+                    <div
+                      key={item._id}
+                      className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                      <img
+                        src={
+                          activeTab === "stays"
+                            ? (item.images && item.images[0]) ||
+                              "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"
+                            : activeTab === "tours"
                               ? (item.images && item.images[0]) ||
-                                "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"
-                              : activeTab === "tours"
-                                ? (item.images && item.images[0]) ||
-                                  "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop"
-                                : item.image ||
-                                  "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop"
-                          }
-                          alt={item.name}
-                          className="w-full h-[35vw] md:h-[12vw] object-cover"
-                          whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.3 }}
-                        />
-                        <div className="p-[2vw] md:p-[1vw]">
-                          <h3 className="font-semibold text-[4vw] md:text-[1.2vw] text-gray-800 mb-[1vw] md:mb-[0.5vw]">
-                            {item.name}
-                          </h3>
+                                "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop"
+                              : item.image ||
+                                "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop"
+                        }
+                        alt={item.name}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="p-4">
+                        <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                          {item.name}
+                        </h3>
 
-                          {activeTab === "stays" && (
-                            <>
-                              <div className="flex items-center gap-[1vw] md:gap-[0.5vw] text-[4vw] md:text-[1vw] text-gray-600 mb-[1vw] md:mb-[0.5vw]">
-                                <MapPin className="w-[3vw] h-[3vw] md:w-[1vw] md:h-[1vw]" />
-                                <span className="line-clamp-1">
-                                  {item.address || "Location not specified"}
+                        {activeTab === "stays" && (
+                          <>
+                            <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                              <MapPin className="w-4 h-4 flex-shrink-0" />
+                              <span className="line-clamp-1">
+                                {item.address ||
+                                  "Location not specified"}
+                              </span>
+                              {item.starsCount > 0 && (
+                                <span className="ml-auto">
+                                  ⭐ {item.starsCount}
                                 </span>
-                                {item.starsCount > 0 && (
-                                  <span className="ml-auto">
-                                    ⭐ {item.starsCount}
-                                  </span>
-                                )}
-                              </div>
-                              {item.included && item.included.length > 0 && (
-                                <div className="flex flex-wrap gap-[1vw] md:gap-[0.5vw] mb-[1.5vw] md:mb-[0.75vw]">
-                                  {item.included.slice(0, 3).map((amenity, idx) => (
-                                    <span
-                                      key={idx}
-                                      className="text-[2.5vw] md:text-[0.75vw] bg-gray-100 px-[1vw] md:px-[0.5vw] py-[0.5vw] md:py-[0.25vw] rounded">
-                                      {amenity}
-                                    </span>
-                                  ))}
+                              )}
+                            </div>
+                            {item.included &&
+                              item.included.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mb-3">
+                                  {item.included
+                                    .slice(0, 3)
+                                    .map((amenity, idx) => (
+                                      <span
+                                        key={idx}
+                                        className="text-xs bg-gray-100 px-2 py-1 rounded">
+                                        {amenity}
+                                      </span>
+                                    ))}
                                 </div>
                               )}
-                            </>
-                          )}
+                          </>
+                        )}
 
-                          {activeTab === "tours" && (
-                            <>
-                              <div className="flex items-center gap-[1vw] md:gap-[0.5vw] text-[4vw] md:text-[1vw] text-gray-600 mb-[1vw] md:mb-[0.5vw]">
-                                <span className="bg-blue-100 text-blue-700 px-[1vw] md:px-[0.5vw] py-[0.5vw] md:py-[0.25vw] rounded text-[2.5vw] md:text-[0.75vw]">
-                                  {item.category || "Tour"}
-                                </span>
-                                <MapPin className="w-[3vw] h-[3vw] md:w-[0.9vw] md:h-[0.9vw]" />
-                                <span className="line-clamp-1">{item.location}</span>
-                              </div>
-                              <p className="text-[4vw] md:text-[1vw] text-gray-600 mb-[1vw] md:mb-[0.5vw]">
-                                {home("duration")}: {item.duration || "N/A"}
+                        {activeTab === "tours" && (
+                          <>
+                            <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                              <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium">
+                                {item.category || "Tour"}
+                              </span>
+                              <MapPin className="w-4 h-4" />
+                              <span className="line-clamp-1">
+                                {item.location}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-3">
+                              {home("duration")}:{" "}
+                              {item.duration || "N/A"}
+                            </p>
+                            {item.priceIncluded &&
+                              item.priceIncluded.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mb-3">
+                                  {item.priceIncluded
+                                    .slice(0, 3)
+                                    .map((inc, idx) => (
+                                      <span
+                                        key={idx}
+                                        className="text-xs bg-gray-100 px-2 py-1 rounded">
+                                        {inc}
+                                      </span>
+                                    ))}
+                                </div>
+                              )}
+                          </>
+                        )}
+
+                        {activeTab === "transfers" && (
+                          <>
+                            <div className="text-sm text-gray-600 mb-3 space-y-1">
+                              <p>
+                                <span className="font-medium">
+                                  Passengers:
+                                </span>{" "}
+                                {item.passengers || "N/A"}
                               </p>
-                              {item.priceIncluded && item.priceIncluded.length > 0 && (
-                                <div className="flex flex-wrap gap-[1vw] md:gap-[0.5vw] mb-[1.5vw] md:mb-[0.75vw]">
-                                  {item.priceIncluded.slice(0, 3).map((inc, idx) => (
-                                    <span
-                                      key={idx}
-                                      className="text-[2.5vw] md:text-[0.75vw] bg-gray-100 px-[1vw] md:px-[0.5vw] py-[0.5vw] md:py-[0.25vw] rounded">
-                                      {inc}
-                                    </span>
-                                  ))}
+                              <p>
+                                <span className="font-medium">
+                                  Year:
+                                </span>{" "}
+                                {item.releaseYear || "N/A"}
+                              </p>
+                              <p>
+                                <span className="font-medium">
+                                  Insurance:
+                                </span>{" "}
+                                {item.insurance ? "✓ Yes" : "✗ No"}
+                              </p>
+                            </div>
+                            {item.features &&
+                              item.features.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mb-3">
+                                  {item.features
+                                    .slice(0, 3)
+                                    .map((feature, idx) => (
+                                      <span
+                                        key={idx}
+                                        className="text-xs bg-gray-100 px-2 py-1 rounded">
+                                        {feature}
+                                      </span>
+                                    ))}
                                 </div>
                               )}
-                            </>
-                          )}
+                          </>
+                        )}
 
-                          {activeTab === "transfers" && (
-                            <>
-                              <div className="text-[4vw] md:text-[1vw] text-gray-600 mb-[1.5vw] md:mb-[0.75vw]">
-                                <p className="mb-[0.5vw] md:mb-[0.25vw]">
-                                  <span className="font-medium">Passengers:</span>{" "}
-                                  {item.passengers || "N/A"}
-                                </p>
-                                <p className="mb-[0.5vw] md:mb-[0.25vw]">
-                                  <span className="font-medium">Year:</span>{" "}
-                                  {item.releaseYear || "N/A"}
-                                </p>
-                                <p>
-                                  <span className="font-medium">Insurance:</span>{" "}
-                                  {item.insurance ? "✓ Yes" : "✗ No"}
-                                </p>
-                              </div>
-                              {item.features && item.features.length > 0 && (
-                                <div className="flex flex-wrap gap-[1vw] md:gap-[0.5vw] mb-[1.5vw] md:mb-[0.75vw]">
-                                  {item.features.slice(0, 3).map((feature, idx) => (
-                                    <span
-                                      key={idx}
-                                      className="text-[2.5vw] md:text-[0.75vw] bg-gray-100 px-[1vw] md:px-[0.5vw] py-[0.5vw] md:py-[0.25vw] rounded">
-                                      {feature}
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                            </>
-                          )}
-
-                          <div className="flex items-center justify-between mt-[2vw] md:mt-[1vw]">
-                            <span className="text-[5vw] md:text-[1.5vw] font-bold text-blue-600">
-                              {activeTab === "stays" && item.price && item.price[0]
-                                ? (() => {
-                                    const matchedPrice = item.price.find(
-                                      (p) => p.currency === currency.code
+                        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                          <span className="text-lg font-bold text-blue-600">
+                            {activeTab === "stays" &&
+                            item.price &&
+                            item.price[0]
+                              ? (() => {
+                                  const matchedPrice =
+                                    item.price.find(
+                                      (p) =>
+                                        p.currency === currency.code,
                                     );
+                                  return matchedPrice ? (
+                                    <span>
+                                      {matchedPrice.from}-
+                                      {matchedPrice.to}
+                                      {currency.symbol}
+                                    </span>
+                                  ) : null;
+                                })()
+                              : activeTab === "tours" &&
+                                  item.price &&
+                                  item.price[0]
+                                ? (() => {
+                                    const matchedPrice =
+                                      item.price.find(
+                                        (p) =>
+                                          p.currency ===
+                                          currency.code,
+                                      );
                                     return matchedPrice ? (
                                       <span>
-                                        {matchedPrice.from}
-                                        {"-"}
-                                        {matchedPrice.to}
+                                        {matchedPrice.price}{" "}
                                         {currency.symbol}
                                       </span>
                                     ) : null;
                                   })()
-                                : activeTab === "tours" && item.price && item.price[0]
+                                : activeTab === "transfers" &&
+                                    item.pricePerKm
                                   ? (() => {
-                                      const matchedPrice = item.price.find(
-                                        (p) => p.currency === currency.code
-                                      );
+                                      const matchedPrice =
+                                        item.pricePerKm.find(
+                                          (p) =>
+                                            p.currency ===
+                                            currency.code,
+                                        );
                                       return matchedPrice ? (
                                         <span>
-                                          {matchedPrice.price} {currency.symbol}
+                                          {matchedPrice.price}
+                                          {currency.symbol}/km
                                         </span>
                                       ) : null;
                                     })()
-                                  : activeTab === "transfers" &&
-                                      item.pricePerKm &&
-                                      item.pricePerKm
-                                    ? (() => {
-                                        const matchedPrice = item.pricePerKm.find(
-                                          (p) => p.currency === currency.code
-                                        );
-                                        return matchedPrice ? (
-                                          <span>
-                                            {matchedPrice.price}
-                                            {currency.symbol} {" /km "}
-                                          </span>
-                                        ) : null;
-                                      })()
-                                    : "Contact for price"}
-                            </span>
-                            <motion.button
-                              onClick={() => handleBooking(item)}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-[3vw] md:px-[1.5vw] py-[1vw] md:py-[0.5vw] rounded-lg hover:from-blue-500 hover:to-blue-600 transition text-[4vw] md:text-[1vw]">
-                              {home("bookNow")}
-                            </motion.button>
-                          </div>
+                                  : "Contact for price"}
+                          </span>
+                          <button
+                            onClick={() => handleBooking(item)}
+                            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                            {home("bookNow")}
+                          </button>
                         </div>
-                      </motion.div>
-                    ))}
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
